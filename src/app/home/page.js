@@ -1,64 +1,83 @@
-"use client"; // Needed for Next.js App Router
+"use client";
 
 import { useState, useEffect } from "react";
-import io from "socket.io-client";
+import { useRouter } from "next/navigation";
+import Tracking from "@/app/_component/Tracking/page"; // Import Tracking component
 
-const socket = io("http://localhost:4000"); // Change to 4000
+export default function Login() {
+    const [form, setForm] = useState({ email: "", password: "" });
+    const [message, setMessage] = useState("");
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const router = useRouter();
 
-export default function Tracking() {
-  const [trackingCode, setTrackingCode] = useState("");
-  const [trackingData, setTrackingData] = useState(null);
-  const [error, setError] = useState(null);
+    // Check if the user is already logged in
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        setIsAuthenticated(!!token);
+    }, []);
 
-  const fetchTrackingData = async () => {
-    setError(null);
-    try {
-      const res = await fetch(`/api/tracking?trackingCode=${trackingCode}`);
-      const data = await res.json();
-      if (res.ok) {
-        setTrackingData(data);
-        socket.emit("track", trackingCode); // Listen for real-time updates
-      } else {
-        setTrackingData(null);
-        setError(data.error);
-      }
-    } catch (err) {
-      setError("Error fetching tracking details");
-    }
-  };
+    const handleChange = (e) => {
+        setForm({ ...form, [e.target.name]: e.target.value });
+    };
 
-  useEffect(() => {
-    socket.on("trackingUpdate", (updatedData) => {
-      if (updatedData.tracking_code === trackingCode) {
-        setTrackingData(updatedData);
-      }
-    });
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const res = await fetch("/api/auth", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(form),
+        });
 
-    return () => socket.off("trackingUpdate");
-  }, [trackingCode]);
+        const data = await res.json();
+        setMessage(data.message || data.error);
 
-  return (
-    <div className="container">
-      <h1>Track Your Order</h1>
-      <input
-        type="text"
-        placeholder="Enter Tracking Code"
-        value={trackingCode}
-        onChange={(e) => setTrackingCode(e.target.value)}
-      />
-      <button onClick={fetchTrackingData}>Track</button>
+        if (data.token) {
+            localStorage.setItem("token", data.token);
+            setIsAuthenticated(true);
+            window.dispatchEvent(new Event("authChange")); // 🔥 Notify Navbar
+        } else if (data.error === "User not found") {
+            setMessage("User not found. Please register first.");
+        }
+    };
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
-
-      {trackingData && (
-        <div className="tracking-info">
-          <h3>Tracking Details:</h3>
-          <p><strong>Status:</strong> {trackingData.status}</p>
-          <p><strong>Type:</strong> {trackingData.type}</p>
-          <p><strong>Shipping Date:</strong> {new Date(trackingData.shipping_date).toLocaleString()}</p>
-          <p><strong>Shipping Cost:</strong> ${trackingData.shipping_cost}</p>
+    return (
+        <div className="flex flex-col items-center justify-center min-h-screen">
+            {isAuthenticated ? (
+                <Tracking /> // Show Tracking component if logged in
+            ) : (
+                <>
+                    <h1 className="text-2xl font-bold">Login</h1>
+                    <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="Email"
+                            className="border p-2"
+                            onChange={handleChange}
+                            required
+                        />
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="Password"
+                            className="border p-2"
+                            onChange={handleChange}
+                            required
+                        />
+                        <button type="submit" className="bg-green-500 text-white px-4 py-2">Login</button>
+                    </form>
+                    {message && <p className="mt-2 text-red-500">{message}</p>}
+                    <p className="mt-4">
+                        Don't have an account?
+                        <button
+                            onClick={() => router.push("/home/register")}
+                            className="text-blue-500 underline ml-1"
+                        >
+                            Register here
+                        </button>
+                    </p>
+                </>
+            )}
         </div>
-      )}
-    </div>
-  );
+    );
 }
