@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { FaUserPlus } from "react-icons/fa";
 
 export default function Register() {
     const [form, setForm] = useState({ name: "", email: "", password: "" });
@@ -40,42 +41,68 @@ export default function Register() {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen">
-            <h1 className="text-2xl font-bold">Register</h1>
-            <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="Full Name"
-                    className="border p-2"
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    className="border p-2"
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    className="border p-2"
-                    onChange={handleChange}
-                    required
-                />
-                <button type="submit" className="bg-green-600 text-white px-4 py-2">Register</button>
-            </form>
-            {message && <p className="mt-2 text-red-500">{message}</p>}
-            <p className="mt-4">
-                Already have an account?{" "}
-                <span className="text-blue-500 cursor-pointer" onClick={() => router.push('/home')}>
-                    Login here
-                </span>
-            </p>
+        <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+            <div className="bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-8 w-full max-w-md">
+                <div className="text-center mb-6">
+                    <FaUserPlus className="text-6xl text-gray-600 dark:text-gray-300 mx-auto" />
+                    <h1 className="text-2xl font-semibold text-gray-800 dark:text-white mt-2">Create an Account</h1>
+                    <p className="text-gray-500 dark:text-gray-400">Join us today!</p>
+                </div>
+
+                <form className="space-y-4" onSubmit={handleSubmit}>
+                    <div>
+                        <label className="block text-gray-700 dark:text-gray-300 font-medium">Full Name</label>
+                        <input
+                            type="text"
+                            name="name"
+                            placeholder="Enter your full name"
+                            className="w-full p-3 border rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none"
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-gray-700 dark:text-gray-300 font-medium">Email</label>
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="Enter your email"
+                            className="w-full p-3 border rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none"
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-gray-700 dark:text-gray-300 font-medium">Password</label>
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="Create a password"
+                            className="w-full p-3 border rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none"
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <button
+                        type="submit"
+                        className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 rounded-lg transition"
+                    >
+                        Register
+                    </button>
+                </form>
+
+                {message && <p className="mt-2 text-red-500 text-center">{message}</p>}
+
+                <p className="mt-4 text-center text-gray-600 dark:text-gray-400">
+                    Already have an account?{" "}
+                    <button
+                        onClick={() => router.push("/home")}
+                        className="text-blue-500 font-semibold hover:underline"
+                    >
+                        Login here
+                    </button>
+                </p>
+            </div>
         </div>
     );
 }

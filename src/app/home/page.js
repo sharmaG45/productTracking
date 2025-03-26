@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Tracking from "@/app/_component/Tracking/page"; // Import Tracking component
+import { FaUserCircle } from "react-icons/fa";
 
 export default function Login() {
     const [form, setForm] = useState({ email: "", password: "" });
@@ -41,43 +42,67 @@ export default function Login() {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen">
-            {isAuthenticated ? (
-                <Tracking /> // Show Tracking component if logged in
-            ) : (
-                <>
-                    <h1 className="text-2xl font-bold">Login</h1>
-                    <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
+        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900">
+        {/* 🔥 Show Tracking Component if Authenticated */}
+        {isAuthenticated && <Tracking />}
+
+        {/* 🔹 Login Box */}
+        {!isAuthenticated && (
+            <div className="bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-8 w-full max-w-md">
+                <div className="text-center mb-6">
+                    <FaUserCircle className="text-6xl text-gray-600 dark:text-gray-300 mx-auto" />
+                    <h1 className="text-2xl font-semibold text-gray-800 dark:text-white mt-2">Welcome Back</h1>
+                    <p className="text-gray-500 dark:text-gray-400">Sign in to continue</p>
+                </div>
+
+                <form className="space-y-4" onSubmit={handleSubmit}>
+                    <div>
+                        <label className="block text-gray-700 dark:text-gray-300 font-medium">Email</label>
                         <input
                             type="email"
                             name="email"
-                            placeholder="Email"
-                            className="border p-2"
+                            placeholder="Enter your email"
+                            className="w-full p-3 border rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none"
                             onChange={handleChange}
                             required
                         />
+                    </div>
+                    <div>
+                        <label className="block text-gray-700 dark:text-gray-300 font-medium">Password</label>
                         <input
                             type="password"
                             name="password"
-                            placeholder="Password"
-                            className="border p-2"
+                            placeholder="Enter your password"
+                            className="w-full p-3 border rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none"
                             onChange={handleChange}
                             required
                         />
-                        <button type="submit" className="bg-green-500 text-white px-4 py-2">Login</button>
-                    </form>
-                    {message && <p className="mt-2 text-red-500">{message}</p>}
-                    <p className="mt-4">
-                        Don't have an account?
-                        <button
-                            onClick={() => router.push("/home/register")}
-                            className="text-blue-500 underline ml-1"
-                        >
-                            Register here
-                        </button>
-                    </p>
-                </>
-            )}
-        </div>
+                    </div>
+                    <button
+                        type="submit"
+                        className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 rounded-lg transition"
+                    >
+                        Login
+                    </button>
+                </form>
+
+                {message && <p className="mt-2 text-red-500 text-center">{message}</p>}
+
+                <p className="mt-4 text-center text-gray-600 dark:text-gray-400">
+                    Don't have an account?{" "}
+                    <button
+                        onClick={() => router.push("/home/register")}
+                        className="text-blue-500 font-semibold hover:underline"
+                    >
+                        Register here
+                    </button>
+                </p>
+            </div>
+        )}
+    </div>
+
+
+
+
     );
 }

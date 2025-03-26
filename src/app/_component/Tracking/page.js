@@ -38,39 +38,46 @@ const Tracking = () => {
     }, [trackingCode]);
 
     return (
-        <div className="flex flex-col items-center p-6 bg-gray-100 min-h-screen">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl">
-                <h1 className="text-2xl font-bold text-center mb-4">Track Shipment</h1>
+        <div className="flex flex-col items-center p-6 bg-gray-100 dark:bg-gray-900 min-h-screen">
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-3xl">
+                <h1 className="text-2xl font-bold text-center mb-4 text-gray-900 dark:text-white">
+                    Track Shipment
+                </h1>
+
+                {/* Input and Button */}
                 <div className="flex flex-col md:flex-row gap-2">
                     <input
                         type="text"
-                        className="border p-2 rounded w-full md:w-3/4"
+                        className="border p-3 rounded-lg w-full md:w-3/4 bg-gray-100 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
                         placeholder="Enter Tracking Code"
                         value={trackingCode}
                         onChange={(e) => setTrackingCode(e.target.value)}
                     />
                     <button
                         onClick={fetchTrackingData}
-                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                        className="bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition"
                     >
                         Track
                     </button>
                 </div>
+
+                {/* Error Message */}
                 {error && <p className="text-red-500 mt-2">{error}</p>}
+
+                {/* Tracking Details */}
                 {trackingData && (
-                    <div className="tracking-info mt-6">
-                        <h3 className="text-lg font-semibold">Tracking Details:</h3>
-                        <p>
+                    <div className="tracking-info mt-6 bg-gray-50 dark:bg-gray-700 p-4 rounded-lg shadow">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Tracking Details:</h3>
+                        <p className="text-gray-700 dark:text-gray-300">
                             <strong>Status:</strong> {trackingData.status}
                         </p>
-                        <p>
+                        <p className="text-gray-700 dark:text-gray-300">
                             <strong>Type:</strong> {trackingData.type}
                         </p>
-                        <p>
-                            <strong>Shipping Date:</strong>{' '}
-                            {new Date(trackingData.shipping_date).toLocaleString()}
+                        <p className="text-gray-700 dark:text-gray-300">
+                            <strong>Shipping Date:</strong> {new Date(trackingData.shipping_date).toLocaleString()}
                         </p>
-                        <p>
+                        <p className="text-gray-700 dark:text-gray-300">
                             <strong>Shipping Cost:</strong> ${trackingData.shipping_cost}
                         </p>
                     </div>
