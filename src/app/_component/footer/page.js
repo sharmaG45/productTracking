@@ -10,10 +10,10 @@ const Footer = () => {
         <footer className="bg-gray-900 text-white py-6 mt-10">
             <div className="container mx-auto px-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center md:text-left">
-                    
+
                     {/* 🔹 Logo & Company Info */}
                     <div>
-                        <h2 className="text-2xl font-bold">Product Tracking </h2>
+                        <h2 className="text-2xl font-bold" onClick={() => router.push("/")}>Product Tracking </h2>
                         {/* <p className="text-gray-400 mt-2">Your trusted flight booking platform.</p> */}
                     </div>
 

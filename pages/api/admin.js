@@ -27,20 +27,14 @@ export default async function handler(req, res) {
                 return res.status(400).json({ error: "All fields are required" });
             }
 
-            const query = `
-                INSERT INTO tracking (tracking_code, status, type, shipping_date, shipping_cost) 
-                VALUES (?, ?, ?, ?, ?)`;
+            const query = `INSERT INTO tracking (tracking_code, status, type, shipping_date, shipping_cost) VALUES (?, ?, ?, ?, ?)`;
 
             try {
                 const [result] = await db.execute(query, [
                     tracking_code, status, type, shipping_date, shipping_cost
                 ]);
 
-                if (result.affectedRows === 1) {
-                    return res.status(201).json({ message: "Shipment added successfully" });
-                } else {
-                    throw new Error("Insertion failed");
-                }
+                return res.status(201).json({ message: "Shipment added successfully", id: result.insertId });
             } catch (insertError) {
                 console.error("Insert Query Error:", insertError);
                 return res.status(500).json({ error: "Failed to insert shipment" });
@@ -51,14 +45,13 @@ export default async function handler(req, res) {
             // Update an existing shipment
             const { id, tracking_code, status, type, shipping_date, shipping_cost } = req.body;
 
+            console.log("Update Request Body:", req.body); // Debugging Log
+
             if (!id || !tracking_code || !status || !type || !shipping_date || !shipping_cost) {
                 return res.status(400).json({ error: "All fields are required for update" });
             }
 
-            const query = `
-                UPDATE tracking 
-                SET tracking_code=?, status=?, type=?, shipping_date=?, shipping_cost=? 
-                WHERE id=?`;
+            const query = `UPDATE tracking SET tracking_code=?, status=?, type=?, shipping_date=?, shipping_cost=? WHERE id=?`;
 
             try {
                 const [result] = await db.execute(query, [
@@ -66,7 +59,7 @@ export default async function handler(req, res) {
                 ]);
 
                 if (result.affectedRows === 0) {
-                    return res.status(404).json({ error: "Shipment not found" });
+                    return res.status(404).json({ error: "Shipment not found or no changes made" });
                 }
 
                 return res.status(200).json({ message: "Shipment updated successfully" });

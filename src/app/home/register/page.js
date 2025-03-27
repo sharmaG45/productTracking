@@ -42,67 +42,80 @@ export default function Register() {
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-            <div className="bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-8 w-full max-w-md">
-                <div className="text-center mb-6">
-                    <FaUserPlus className="text-6xl text-gray-600 dark:text-gray-300 mx-auto" />
-                    <h1 className="text-2xl font-semibold text-gray-800 dark:text-white mt-2">Create an Account</h1>
-                    <p className="text-gray-500 dark:text-gray-400">Join us today!</p>
+            <div className="flex w-full max-w-4xl bg-white dark:bg-gray-800 shadow-lg rounded-2xl overflow-hidden">
+                {/* Left side - Image */}
+                <div className="hidden md:flex md:w-1/2 bg-blue-500">
+                    <img
+                        src="/assets/images/bg.png" // Replace with your image path
+                        alt="Login"
+                        className="w-full h-full object-cover"
+                    />
                 </div>
 
-                <form className="space-y-4" onSubmit={handleSubmit}>
-                    <div>
-                        <label className="block text-gray-700 dark:text-gray-300 font-medium">Full Name</label>
-                        <input
-                            type="text"
-                            name="name"
-                            placeholder="Enter your full name"
-                            className="w-full p-3 border rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none"
-                            onChange={handleChange}
-                            required
-                        />
+                {/* Right side - Form */}
+                <div className="w-full md:w-1/2 p-8">
+                    <div className="text-center mb-6">
+                        <FaUserPlus className="text-6xl text-gray-600 dark:text-gray-300 mx-auto" />
+                        <h1 className="text-2xl font-semibold text-gray-800 dark:text-white mt-2">Create an Account</h1>
+                        <p className="text-gray-500 dark:text-gray-400">Join us today!</p>
                     </div>
-                    <div>
-                        <label className="block text-gray-700 dark:text-gray-300 font-medium">Email</label>
-                        <input
-                            type="email"
-                            name="email"
-                            placeholder="Enter your email"
-                            className="w-full p-3 border rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none"
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-gray-700 dark:text-gray-300 font-medium">Password</label>
-                        <input
-                            type="password"
-                            name="password"
-                            placeholder="Create a password"
-                            className="w-full p-3 border rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none"
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <button
-                        type="submit"
-                        className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 rounded-lg transition"
-                    >
-                        Register
-                    </button>
-                </form>
 
-                {message && <p className="mt-2 text-red-500 text-center">{message}</p>}
+                    <form className="space-y-4" onSubmit={handleSubmit}>
+                        <div>
+                            <label className="block text-gray-700 dark:text-gray-300 font-medium">Full Name</label>
+                            <input
+                                type="text"
+                                name="name"
+                                placeholder="Enter your full name"
+                                className="w-full p-3 border rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none"
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-gray-700 dark:text-gray-300 font-medium">Email</label>
+                            <input
+                                type="email"
+                                name="email"
+                                placeholder="Enter your email"
+                                className="w-full p-3 border rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none"
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-gray-700 dark:text-gray-300 font-medium">Password</label>
+                            <input
+                                type="password"
+                                name="password"
+                                placeholder="Create a password"
+                                className="w-full p-3 border rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none"
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <button
+                            type="submit"
+                            className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 rounded-lg transition"
+                        >
+                            Register
+                        </button>
+                    </form>
 
-                <p className="mt-4 text-center text-gray-600 dark:text-gray-400">
-                    Already have an account?{" "}
-                    <button
-                        onClick={() => router.push("/home")}
-                        className="text-blue-500 font-semibold hover:underline"
-                    >
-                        Login here
-                    </button>
-                </p>
+                    {message && <p className="mt-2 text-red-500 text-center">{message}</p>}
+
+                    <p className="mt-4 text-center text-gray-600 dark:text-gray-400">
+                        Already have an account? {" "}
+                        <button
+                            onClick={() => router.push("/home")}
+                            className="text-blue-500 font-semibold hover:underline"
+                        >
+                            Login here
+                        </button>
+                    </p>
+                </div>
             </div>
         </div>
+
     );
 }

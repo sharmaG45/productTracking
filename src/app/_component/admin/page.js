@@ -110,7 +110,7 @@ const Admin = () => {
 
                 {/* Add/Edit Shipment Modal */}
                 {(isAddModalOpen || isEditModalOpen) && (
-                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 px-4">
+                    <div className="fixed inset-0 flex items-center justify-center bg-opacity-50 px-4">
                         <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
                             <h2 className="text-xl font-semibold mb-4">{isEditModalOpen ? "Edit Shipment" : "Add Shipment"}</h2>
                             <label className="block mb-2">Tracking Code</label>

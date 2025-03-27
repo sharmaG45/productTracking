@@ -57,6 +57,11 @@ const Admin = () => {
     };
 
     const handleEditShipment = async () => {
+        if (!editingShipment.id) {
+            console.error("Error: Missing shipment ID");
+            return;
+        }
+
         try {
             const response = await fetch("/api/admin", {
                 method: "PUT",
@@ -64,16 +69,19 @@ const Admin = () => {
                 body: JSON.stringify(editingShipment),
             });
 
+            const result = await response.json();
+
             if (response.ok) {
                 setIsEditModalOpen(false);
                 fetchShipments();
             } else {
-                console.error("Failed to update shipment");
+                console.error("Failed to update shipment:", result.error);
             }
         } catch (error) {
             console.error("Error updating shipment:", error);
         }
     };
+
 
     const handleDeleteShipment = async (id) => {
         try {
@@ -155,12 +163,12 @@ const Admin = () => {
                                 {["tracking_code", "type", "shipping_date", "shipping_cost"].map((field) => (
                                     <div key={field} className="mb-3">
                                         <label className="block capitalize">{field.replace("_", " ")}</label>
-                                        <input type={field === "shipping_date" ? "date" : "text"} className="w-full p-2 border rounded" 
-                                            value={isEditModalOpen ? editingShipment[field] : newShipment[field]} 
+                                        <input type={field === "shipping_date" ? "date" : "text"} className="w-full p-2 border rounded"
+                                            value={isEditModalOpen ? editingShipment[field] : newShipment[field]}
                                             onChange={(e) => {
                                                 if (isEditModalOpen) setEditingShipment({ ...editingShipment, [field]: e.target.value });
                                                 else setNewShipment({ ...newShipment, [field]: e.target.value });
-                                            }} 
+                                            }}
                                         />
                                     </div>
                                 ))}
