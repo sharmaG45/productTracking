@@ -85,7 +85,7 @@ const Tracking = () => {
                                         <div className="col-lg-6 mb-4 mb-lg-0">
                                             <h4 className="form-label text-4">
                                                 To track your consignment please enter DTDC tracking number
-                                                (AWB or Reference Number)
+                                                (Reference Number)
                                             </h4>
                                             <div className="row pt-2">
                                                 <div className="form-group col">
@@ -263,7 +263,7 @@ const Tracking = () => {
                             >
                                 <div className="tracking_details d-flex gap-2">
                                     <h5 className="text-white m-0">
-                                        Tracking Details : <span className="h6">Z55779985</span>
+                                        Tracking Details : <span className="h6">{trackingData.tracking_code}</span>
                                     </h5>
                                     {/*<p class="text-white m-0">I14566497</p>*/}
                                 </div>
@@ -280,7 +280,7 @@ const Tracking = () => {
                                                 {" "}
                                                 Raise your Query
                                             </a>
-                                            <img src="img/edit_icon.svg" style={{ width: "16%" }} />
+                                            <img src="/assets/images/edit_icon.svg" style={{ width: "16%" }} />
                                         </li>
                                         {/*<li><a href="javascript:window.print()"  class="text-decoration-none text-white">
                 <img src="img/print_1.svg">Print</a>
@@ -340,20 +340,20 @@ const Tracking = () => {
                                             <div className="reference_no w-sm-50 float-start mb-2 w-25">
                                                 <div className="reference_no">
                                                     <p className="h6 text-muted mb-1 mb-lg-3">Reference No</p>
-                                                    <p className="h6 milestone_title text-dark">127819510767</p>
+                                                    <p className="h6 milestone_title text-dark">{trackingData.reference_no}</p>
                                                 </div>
                                             </div>
                                             <div className="origin w-sm-50 float-start mb-2 w-25">
                                                 <div className="reference_no">
                                                     <p className="h6 text-muted mb-1 mb-lg-3">Origin</p>
-                                                    <p className="h6 milestone_title text-dark">DELHI, 110020</p>
+                                                    <p className="h6 milestone_title text-dark">{trackingData.origin}</p>
                                                 </div>
                                             </div>
                                             <div className="destination w-sm-50 float-start mb-2 w-25">
                                                 <div className="reference_no">
                                                     <p className="h6 text-muted mb-1 mb-lg-3">Destination</p>
                                                     <p className="h6 milestone_title text-dark">
-                                                        SAHIBABAD, 201013
+                                                        {trackingData.destination}
                                                     </p>
                                                 </div>
                                             </div>
@@ -361,7 +361,7 @@ const Tracking = () => {
                                                 <div className="reference_no">
                                                     <p className="h6 text-muted mb-1 mb-lg-3">Booked On</p>
                                                     <p className="h6 milestone_title text-dark">
-                                                        Tue, 4th Mar'25 @10:14 PM
+                                                        {new Date(trackingData.booked_on).toLocaleDateString()}
                                                     </p>
                                                 </div>
                                             </div>
@@ -375,13 +375,13 @@ const Tracking = () => {
                                         >
                                             <div className="timeline-content text-sm-center text-md-start XS-d-flex">
                                                 <div className="inner-circle">
-                                                    <img src="img/Check.svg" className="position-absolute" />
+                                                    <img src="/assets/images/Check.svg" className="position-absolute" />
                                                 </div>
                                                 <div>
                                                     <p className="h6 milestone_title text-dark">Softdata Upload</p>
                                                     <p className="h6 text-muted mb-1 mb-lg-3">
                                                         <br />
-                                                        Tue, 4th Mar'25 @7:51 PM
+                                                        {trackingData.shipping_date}
                                                     </p>
                                                 </div>
                                             </div>
@@ -392,7 +392,7 @@ const Tracking = () => {
                                         >
                                             <div className="timeline-content text-sm-center text-md-start XS-d-flex">
                                                 <div className="inner-circle">
-                                                    <img src="img/Check.svg" className="position-absolute" />
+                                                    <img src="/assets/images/Check.svg" className="position-absolute" />
                                                 </div>
                                                 <div>
                                                     <p className="h6 milestone_title text-dark">Picked Up</p>
@@ -408,12 +408,12 @@ const Tracking = () => {
                                         >
                                             <div className="timeline-content text-sm-center text-md-start XS-d-flex">
                                                 <div className="inner-circle">
-                                                    <img src="img/Check.svg" className="position-absolute" />
+                                                    <img src="/assets/images/Check.svg" className="position-absolute" />
                                                 </div>
                                                 <div>
                                                     <p className="h6 milestone_title text-dark">Accepted</p>
                                                     <p className="h6 text-muted mb-1 mb-lg-3">
-                                                        DELHI
+                                                        {trackingData.origin}
                                                         <br />
                                                         Tue, 4th Mar'25 @10:14 PM
                                                     </p>
@@ -426,12 +426,12 @@ const Tracking = () => {
                                         >
                                             <div className="timeline-content text-sm-center text-md-start XS-d-flex">
                                                 <div className="inner-circle">
-                                                    <img src="img/Check.svg" className="position-absolute" />
+                                                    <img src="/assets/images/Check.svg" className="position-absolute" />
                                                 </div>
                                                 <div>
                                                     <p className="h6 milestone_title text-dark">In Transit</p>
                                                     <p className="h6 text-muted mb-1 mb-lg-3">
-                                                        SAHIBABAD
+                                                        {trackingData.destination}
                                                         <br />
                                                         Wed, 5th Mar'25 @6:37 AM
                                                     </p>
@@ -444,7 +444,7 @@ const Tracking = () => {
                                         >
                                             <div className="timeline-content text-sm-center text-md-start XS-d-flex">
                                                 <div className="inner-circle">
-                                                    <img src="img/Check.svg" className="position-absolute" />
+                                                    <img src="/assets/images/Check.svg" className="position-absolute" />
                                                 </div>
                                                 <div>
                                                     <p className="h6 milestone_title text-dark">At Destination</p>
@@ -462,7 +462,7 @@ const Tracking = () => {
                                         >
                                             <div className="timeline-content text-sm-center text-md-start XS-d-flex">
                                                 <div className="inner-circle">
-                                                    <img src="img/Check.svg" className="position-absolute" />
+                                                    <img src="/assets/images/Check.svg" className="position-absolute" />
                                                 </div>
                                                 <div>
                                                     <p className="h6 milestone_title text-dark">RTO Accepted</p>
@@ -531,7 +531,7 @@ const Tracking = () => {
                                                             <div className="timeline-content text-sm-center text-md-start XS-d-flex">
                                                                 <div className="inner-circle">
                                                                     <img
-                                                                        src="img/Check.svg"
+                                                                        src="/assets/images/Check.svg"
                                                                         className="position-absolute"
                                                                     />
                                                                 </div>
@@ -553,7 +553,7 @@ const Tracking = () => {
                                                             <div className="timeline-content text-sm-center text-md-start XS-d-flex">
                                                                 <div className="inner-circle">
                                                                     <img
-                                                                        src="img/Check.svg"
+                                                                        src="/assets/images/Check.svg"
                                                                         className="position-absolute"
                                                                     />
                                                                 </div>
@@ -574,7 +574,7 @@ const Tracking = () => {
                                                             <div className="timeline-content text-sm-center text-md-start XS-d-flex">
                                                                 <div className="inner-circle">
                                                                     <img
-                                                                        src="img/Check.svg"
+                                                                        src="/assets/images/Check.svg"
                                                                         className="position-absolute"
                                                                     />
                                                                 </div>
@@ -595,7 +595,7 @@ const Tracking = () => {
                                                             <div className="timeline-content text-sm-center text-md-start XS-d-flex">
                                                                 <div className="inner-circle">
                                                                     <img
-                                                                        src="img/Check.svg"
+                                                                        src="/assets/images/Check.svg"
                                                                         className="position-absolute"
                                                                     />
                                                                 </div>
@@ -618,7 +618,7 @@ const Tracking = () => {
                                                             <div className="timeline-content text-sm-center text-md-start XS-d-flex">
                                                                 <div className="inner-circle">
                                                                     <img
-                                                                        src="img/Check.svg"
+                                                                        src="/assets/images/Check.svg"
                                                                         className="position-absolute"
                                                                     />
                                                                 </div>
@@ -641,7 +641,7 @@ const Tracking = () => {
                                                             <div className="timeline-content text-sm-center text-md-start XS-d-flex">
                                                                 <div className="inner-circle">
                                                                     <img
-                                                                        src="img/Check.svg"
+                                                                        src="/assets/images/Check.svg"
                                                                         className="position-absolute"
                                                                     />
                                                                 </div>

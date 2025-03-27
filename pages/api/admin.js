@@ -21,17 +21,17 @@ export default async function handler(req, res) {
 
         else if (req.method === "POST") {
             // Add a new shipment
-            const { tracking_code, status, type, shipping_date, shipping_cost } = req.body;
+            const { tracking_code, status, type, shipping_date, shipping_cost, reference_no, origin, destination, booked_on } = req.body;
 
-            if (!tracking_code || !status || !type || !shipping_date || !shipping_cost) {
+            if (!tracking_code || !status || !type || !shipping_date || !shipping_cost || !reference_no || !origin || !destination || !booked_on) {
                 return res.status(400).json({ error: "All fields are required" });
             }
 
-            const query = `INSERT INTO tracking (tracking_code, status, type, shipping_date, shipping_cost) VALUES (?, ?, ?, ?, ?)`;
+            const query = `INSERT INTO tracking (tracking_code, status, type, shipping_date, shipping_cost, reference_no, origin, destination,booked_on) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
             try {
                 const [result] = await db.execute(query, [
-                    tracking_code, status, type, shipping_date, shipping_cost
+                    tracking_code, status, type, shipping_date, shipping_cost, reference_no, origin, destination, booked_on
                 ]);
 
                 return res.status(201).json({ message: "Shipment added successfully", id: result.insertId });
@@ -43,19 +43,19 @@ export default async function handler(req, res) {
 
         else if (req.method === "PUT") {
             // Update an existing shipment
-            const { id, tracking_code, status, type, shipping_date, shipping_cost } = req.body;
+            const { id, tracking_code, status, type, shipping_date, shipping_cost, reference_no, origin, destination, booked_on } = req.body;
 
             console.log("Update Request Body:", req.body); // Debugging Log
 
-            if (!id || !tracking_code || !status || !type || !shipping_date || !shipping_cost) {
+            if (!id || !tracking_code || !status || !type || !shipping_date || !shipping_cost || !reference_no || !origin || !destination || !booked_on) {
                 return res.status(400).json({ error: "All fields are required for update" });
             }
 
-            const query = `UPDATE tracking SET tracking_code=?, status=?, type=?, shipping_date=?, shipping_cost=? WHERE id=?`;
+            const query = `UPDATE tracking SET tracking_code=?, status=?, type=?, shipping_date=?, shipping_cost=?, reference_no=?, origin=?, destination=?, booked_on=?  WHERE id=?`;
 
             try {
                 const [result] = await db.execute(query, [
-                    tracking_code, status, type, shipping_date, shipping_cost, id
+                    tracking_code, status, type, shipping_date, shipping_cost, reference_no, origin, destination, booked_on, id
                 ]);
 
                 if (result.affectedRows === 0) {

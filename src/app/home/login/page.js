@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Tracking from "@/app/_component/Tracking/page";
 import { FaUserCircle } from "react-icons/fa";
 
 export default function Login() {
@@ -61,7 +60,7 @@ export default function Login() {
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900">
             {/* 🔥 Show Tracking Component if Authenticated */}
-            {isAuthenticated && role === "user" && <Tracking />}
+            {isAuthenticated && role === "user" && router.push("/")}
             {isAuthenticated && role === "admin" && router.push("/home/admin")}
 
             {/* 🔹 Login Box */}

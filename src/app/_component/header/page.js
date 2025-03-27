@@ -45,9 +45,9 @@ const Navbar = () => {
 
                 {/* Desktop Menu */}
                 <div className="hidden md:flex space-x-6">
-                    <Link href="/" className="text-white hover:text-gray-300">Home</Link>
-                    <Link href="/home/about" className="text-white hover:text-gray-300">About</Link>
-                    <Link href="/home/contact" className="text-white hover:text-gray-300">Contact</Link>
+                    <Link href="/" className="text-white text-lg hover:text-gray-300">Home</Link>
+                    <Link href="/home/about" className="text-white text-lg hover:text-gray-300">About</Link>
+                    <Link href="/home/contact" className="text-white text-lg hover:text-gray-300">Contact</Link>
                 </div>
 
                 {/* Right: Auth Buttons (Desktop) */}
@@ -90,7 +90,7 @@ const Navbar = () => {
                         <>
                             <div className="flex space-x-4">
                                 <button
-                                    onClick={() => router.push("/home")}
+                                    onClick={() => router.push("/home/login")}
                                     className="flex items-center gap-2 bg-blue-500 px-5 py-2 rounded-lg text-white font-medium transition-all duration-300 hover:bg-blue-600 shadow-md"
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
