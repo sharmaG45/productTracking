@@ -1,63 +1,110 @@
-import mysql from 'mysql2/promise';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import mysql from "mysql2/promise";
 
-const handler = async (req, res) => {
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method Not Allowed' });
-    }
+const dbConfig = {
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+};
 
-    const { username, password } = req.body;
-
-    if (!username || !password) {
-        return res.status(400).json({ error: 'Username and password are required' });
-    }
-
+export default async function handler(req, res) {
     let db;
+
     try {
-        // Connect to the database
-        db = await mysql.createConnection({
-            host: 'localhost',
-            user: 'root', // Update with your MySQL username
-            password: 'Shubham@9097', // Update with your MySQL password
-            database: 'trackingApp',
-        });
+        db = await mysql.createConnection(dbConfig);
 
-        // Retrieve the user from the database
-        const [users] = await db.execute(
-            'SELECT * FROM users WHERE username = ?',
-            [username]
-        );
-
-        if (users.length === 0) {
-            return res.status(401).json({ error: 'Invalid username or password' });
+        if (req.method === "GET") {
+            // Fetch all shipments
+            const [rows] = await db.execute("SELECT * FROM tracking ORDER BY shipping_date DESC");
+            return res.status(200).json(rows);
         }
 
-        const user = users[0];
+        else if (req.method === "POST") {
+            // Add a new shipment
+            const { tracking_code, status, type, shipping_date, shipping_cost } = req.body;
 
-        // Compare the provided password with the stored hash
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(401).json({ error: 'Invalid username or password' });
+            if (!tracking_code || !status || !type || !shipping_date || !shipping_cost) {
+                return res.status(400).json({ error: "All fields are required" });
+            }
+
+            const query = `
+                INSERT INTO tracking (tracking_code, status, type, shipping_date, shipping_cost) 
+                VALUES (?, ?, ?, ?, ?)`;
+
+            try {
+                const [result] = await db.execute(query, [
+                    tracking_code, status, type, shipping_date, shipping_cost
+                ]);
+
+                if (result.affectedRows === 1) {
+                    return res.status(201).json({ message: "Shipment added successfully" });
+                } else {
+                    throw new Error("Insertion failed");
+                }
+            } catch (insertError) {
+                console.error("Insert Query Error:", insertError);
+                return res.status(500).json({ error: "Failed to insert shipment" });
+            }
         }
 
-        // Generate a JWT token
-        const token = jwt.sign(
-            { userId: user.id, username: user.username },
-            'your_jwt_secret', // Replace with your own secret key
-            { expiresIn: '1h' }
-        );
+        else if (req.method === "PUT") {
+            // Update an existing shipment
+            const { id, tracking_code, status, type, shipping_date, shipping_cost } = req.body;
 
-        // Send the token to the client
-        res.status(200).json({ token });
+            if (!id || !tracking_code || !status || !type || !shipping_date || !shipping_cost) {
+                return res.status(400).json({ error: "All fields are required for update" });
+            }
+
+            const query = `
+                UPDATE tracking 
+                SET tracking_code=?, status=?, type=?, shipping_date=?, shipping_cost=? 
+                WHERE id=?`;
+
+            try {
+                const [result] = await db.execute(query, [
+                    tracking_code, status, type, shipping_date, shipping_cost, id
+                ]);
+
+                if (result.affectedRows === 0) {
+                    return res.status(404).json({ error: "Shipment not found" });
+                }
+
+                return res.status(200).json({ message: "Shipment updated successfully" });
+            } catch (updateError) {
+                console.error("Update Query Error:", updateError);
+                return res.status(500).json({ error: "Failed to update shipment" });
+            }
+        }
+
+        else if (req.method === "DELETE") {
+            // Delete a shipment
+            const { id } = req.query;
+
+            if (!id) {
+                return res.status(400).json({ error: "Shipment ID is required for deletion" });
+            }
+
+            try {
+                const [result] = await db.execute("DELETE FROM tracking WHERE id=?", [id]);
+
+                if (result.affectedRows === 0) {
+                    return res.status(404).json({ error: "Shipment not found" });
+                }
+
+                return res.status(200).json({ message: "Shipment deleted successfully" });
+            } catch (deleteError) {
+                console.error("Delete Query Error:", deleteError);
+                return res.status(500).json({ error: "Failed to delete shipment" });
+            }
+        }
+
+        else {
+            return res.status(405).json({ error: "Method Not Allowed" });
+        }
     } catch (error) {
-        console.error('Database Error:', error.message);
-        res.status(500).json({ error: 'Internal Server Error' });
+        console.error("Database Error:", error);
+        return res.status(500).json({ error: "Internal Server Error" });
     } finally {
-        if (db) {
-            await db.end();
-        }
+        if (db) await db.end();
     }
 }
-
-export default handler;

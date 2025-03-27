@@ -55,13 +55,13 @@ const Navbar = () => {
                     ) : (
                         <>
                             <button
-                                onClick={() => router.push("/login")}
+                                onClick={() => router.push("/home")}
                                 className="bg-blue-500 px-4 py-2 rounded hover:bg-blue-600"
                             >
                                 Login
                             </button>
                             <button
-                                onClick={() => router.push("/register")}
+                                onClick={() => router.push("/home/register")}
                                 className="bg-green-500 px-4 py-2 rounded hover:bg-green-600"
                             >
                                 Create Account
@@ -97,13 +97,13 @@ const Navbar = () => {
                     ) : (
                         <>
                             <button
-                                onClick={() => router.push("/login")}
+                                onClick={() => router.push("/home")}
                                 className="w-full bg-blue-500 px-4 py-2 rounded text-white hover:bg-blue-600"
                             >
                                 Login
                             </button>
                             <button
-                                onClick={() => router.push("/register")}
+                                onClick={() => router.push("/home/register")}
                                 className="w-full bg-green-500 px-4 py-2 rounded text-white hover:bg-green-600"
                             >
                                 Create Account
