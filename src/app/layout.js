@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from "./_component/header/page";
 import Footer from "./_component/footer/page";
 
@@ -11,6 +12,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="stylesheet" href="/assets/images/stylesheet/style.css" />
+      </head>
       <body>
         <Navbar />
         {children}

@@ -45,9 +45,9 @@ const Navbar = () => {
 
                 {/* Desktop Menu */}
                 <div className="hidden md:flex space-x-6">
-                    <Link href="/" className="hover:text-gray-300">Home</Link>
-                    <Link href="/home/about" className="hover:text-gray-300">About</Link>
-                    <Link href="/home/contact" className="hover:text-gray-300">Contact</Link>
+                    <Link href="/" className="text-white hover:text-gray-300">Home</Link>
+                    <Link href="/home/about" className="text-white hover:text-gray-300">About</Link>
+                    <Link href="/home/contact" className="text-white hover:text-gray-300">Contact</Link>
                 </div>
 
                 {/* Right: Auth Buttons (Desktop) */}
