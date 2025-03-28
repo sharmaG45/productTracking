@@ -23,32 +23,31 @@ const Navbar = () => {
         {
             title: "Company",
             submenu: [
-                { title: "About Us", link: "about-us.asp" },
-                { title: "Awards and Recognition", link: "awards-and-recognition.asp" },
+                { title: "About Us", link: "/home/about" },
+                { title: "Awards and Recognition", link: "#" },
 
             ],
         },
         {
             title: "Solutions",
             submenu: [
-                { title: "Industry Solutions", link: "industry-solutions.asp" },
-                { title: "Temperature Controlled Logistics", link: "temperature_controlled_logistics.asp" },
-                { title: "Technology Solutions", link: "technology-solutions.asp" },
+                { title: "Industry Solutions", link: "#" },
+                { title: "Technology Solutions", link: "#" },
             ],
         },
         {
             title: "Careers",
             submenu: [
-                { title: "Life at DTDC", link: "life-at-dtdc.asp" },
-                { title: "Join us", link: "join-us.asp" },
+                { title: "Life at DTDC", link: "#" },
+                { title: "Join us", link: "#" },
             ],
         },
         {
             title: "Contact Us",
             submenu: [
-                { title: "Track your Shipment", link: "trace.asp" },
-                { title: "Locate Us", link: "location-finder.asp" },
-                { title: "Customer Care", link: "customer-care.asp" },
+                { title: "Track your Shipment", link: "/" },
+                { title: "Locate Us", link: "#" },
+                { title: "Customer Care", link: "#" },
             ],
         },
     ];
