@@ -24,7 +24,7 @@ export default async function handler(req, res) {
 
         // Check if user already exists
         const [existingUsers] = await connection.execute(
-            "SELECT * FROM user WHERE email = ?",
+            "SELECT * FROM users WHERE email = ?",
             [email]
         );
         if (existingUsers.length > 0) {
@@ -36,7 +36,7 @@ export default async function handler(req, res) {
 
         // Insert user into database
         await connection.execute(
-            "INSERT INTO user (name, email, password) VALUES (?, ?, ?)",
+            "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
             [name, email, hashedPassword]
         );
 
