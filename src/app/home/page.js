@@ -9,6 +9,7 @@ const Tracking = () => {
     const [trackingCode, setTrackingCode] = useState('');
     const [trackingData, setTrackingData] = useState(null);
     const [error, setError] = useState(null);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const fetchTrackingData = async () => {
         setError(null);
@@ -38,9 +39,6 @@ const Tracking = () => {
     }, [trackingCode]);
 
     return (
-
-
-
 
         <>
 
@@ -84,8 +82,7 @@ const Tracking = () => {
                                     <div className="row">
                                         <div className="col-lg-6 mb-4 mb-lg-0">
                                             <h4 className="form-label text-4">
-                                                To track your consignment please enter DTDC tracking number
-                                                (Reference Number)
+                                                To track your consignment, please enter your tracking number (Reference Number).
                                             </h4>
                                             <div className="row pt-2">
                                                 <div className="form-group col">
@@ -135,8 +132,7 @@ const Tracking = () => {
                                                     {/*<input type="text"  data-msg-required="" class="form-control" name="trackingNumber" id="trackingNumber" onkeyup="limitCnNumbers()" maxlength="400" required="" value="">*/}
                                                 </div>
                                                 <p className="m-0" style={{ color: "#2F4F4F" }}>
-                                                    To track multiple consignment please enter any combination
-                                                    of up to 25 DTDC tracking numbers, separated by comma.
+                                                    To track multiple consignments, please enter any combination of up to 25 tracking numbers, separated by commas
                                                 </p>
                                             </div>
                                             <div className="row pt-2 justify-content-between">
@@ -477,7 +473,7 @@ const Tracking = () => {
                                     </div>
                                 </div>
                                 <div className="col-lg-3 col-md-3 col-sm-12">
-                                    <div
+                                    {/* <div
                                         className="timeline-content my-3"
                                         data-toggle="popover"
                                         data-trigger="hover"
@@ -497,7 +493,7 @@ const Tracking = () => {
                                         <p className="h6 milestone_title"></p>
                                         <p className="h6 text-muted mb-1 mb-lg-3"></p>
                                         <p className="h6 milestone_title">GHAZIABAD APEX, GHAZIABAD</p>
-                                    </div>
+                                    </div> */}
                                     {/* Milestone for XS */}
                                     <div
                                         className="accordion accordion-flush milestone-tracker-LG"
@@ -506,160 +502,167 @@ const Tracking = () => {
                                         <div className="accordion-item">
                                             <h2 className="accordion-header" id="flush-headingOne">
                                                 <button
-                                                    className="accordion-button collapsed px-2 py-0"
+                                                    className={`accordion-button px-2 py-0 ${isMenuOpen ? "" : "collapsed"}`}
                                                     type="button"
                                                     data-bs-toggle="collapse"
                                                     data-bs-target="#flush-collapseOne"
-                                                    aria-expanded="false"
+                                                    aria-expanded={isMenuOpen ? "true" : "false"}
                                                     aria-controls="flush-collapseOne"
+                                                    onClick={() => setIsMenuOpen(!isMenuOpen)}
                                                 >
+
                                                     See all Updates
                                                 </button>
                                             </h2>
-                                            <div
-                                                id="flush-collapseOne"
-                                                className="accordion-collapse collapse"
-                                                aria-labelledby="flush-headingOne"
-                                                data-bs-parent="#accordionFlushExample"
-                                            >
-                                                <div className="accordion-body p-0">
-                                                    <div className="timeline-steps d-md-flex justify-content-md-between justify-content-lg-between">
-                                                        <div
-                                                            className="timeline-step text-sm-center text-md-start"
-                                                            id="Softdata Upload2"
-                                                        >
-                                                            <div className="timeline-content text-sm-center text-md-start XS-d-flex">
-                                                                <div className="inner-circle">
-                                                                    <img
-                                                                        src="/assets/images/Check.svg"
-                                                                        className="position-absolute"
-                                                                    />
-                                                                </div>
-                                                                <div>
-                                                                    <p className="h6 milestone_title text-dark">
-                                                                        Softdata Upload
-                                                                    </p>
-                                                                    <p className="h6 text-muted mb-1 mb-lg-3">
-                                                                        <br />
-                                                                        Tue, 4th Mar'25 @7:51 PM
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div
-                                                            className="timeline-step text-sm-center text-md-start"
-                                                            id="Picked Up2"
-                                                        >
-                                                            <div className="timeline-content text-sm-center text-md-start XS-d-flex">
-                                                                <div className="inner-circle">
-                                                                    <img
-                                                                        src="/assets/images/Check.svg"
-                                                                        className="position-absolute"
-                                                                    />
-                                                                </div>
-                                                                <div>
-                                                                    <p className="h6 milestone_title text-dark">
-                                                                        Picked Up
-                                                                    </p>
-                                                                    <p className="h6 text-muted mb-1 mb-lg-3">
-                                                                        <br />
-                                                                    </p>
+
+                                            {isMenuOpen &&
+
+                                                <div
+                                                    id="flush-collapseOne"
+                                                    className={`accordion-collapse collapse ${isMenuOpen ? "show" : ""}`}
+                                                    aria-labelledby="flush-headingOne"
+                                                    data-bs-parent="#accordionFlushExample"
+                                                >
+                                                    <div className="accordion-body p-0">
+                                                        <div className="timeline-steps d-md-flex justify-content-md-between justify-content-lg-between">
+                                                            <div
+                                                                className="timeline-step text-sm-center text-md-start"
+                                                                id="Softdata Upload2"
+                                                            >
+                                                                <div className="timeline-content text-sm-center text-md-start XS-d-flex">
+                                                                    <div className="inner-circle">
+                                                                        <img
+                                                                            src="/assets/images/Check.svg"
+                                                                            className="position-absolute"
+                                                                        />
+                                                                    </div>
+                                                                    <div>
+                                                                        <p className="h6 milestone_title text-dark">
+                                                                            Softdata Upload
+                                                                        </p>
+                                                                        <p className="h6 text-muted mb-1 mb-lg-3">
+                                                                            <br />
+                                                                            Tue, 4th Mar'25 @7:51 PM
+                                                                        </p>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div
-                                                            className="timeline-step text-sm-center text-md-start"
-                                                            id="Accepted2"
-                                                        >
-                                                            <div className="timeline-content text-sm-center text-md-start XS-d-flex">
-                                                                <div className="inner-circle">
-                                                                    <img
-                                                                        src="/assets/images/Check.svg"
-                                                                        className="position-absolute"
-                                                                    />
-                                                                </div>
-                                                                <div>
-                                                                    <p className="h6 milestone_title text-dark">Accepted</p>
-                                                                    <p className="h6 text-muted mb-1 mb-lg-3">
-                                                                        DELHI
-                                                                        <br />
-                                                                        Tue, 4th Mar'25 @10:14 PM
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div
-                                                            className="timeline-step text-sm-center text-md-start"
-                                                            id="In Transit2"
-                                                        >
-                                                            <div className="timeline-content text-sm-center text-md-start XS-d-flex">
-                                                                <div className="inner-circle">
-                                                                    <img
-                                                                        src="/assets/images/Check.svg"
-                                                                        className="position-absolute"
-                                                                    />
-                                                                </div>
-                                                                <div>
-                                                                    <p className="h6 milestone_title text-dark">
-                                                                        In Transit
-                                                                    </p>
-                                                                    <p className="h6 text-muted mb-1 mb-lg-3">
-                                                                        SAHIBABAD
-                                                                        <br />
-                                                                        Wed, 5th Mar'25 @6:37 AM
-                                                                    </p>
+                                                            <div
+                                                                className="timeline-step text-sm-center text-md-start"
+                                                                id="Picked Up2"
+                                                            >
+                                                                <div className="timeline-content text-sm-center text-md-start XS-d-flex">
+                                                                    <div className="inner-circle">
+                                                                        <img
+                                                                            src="/assets/images/Check.svg"
+                                                                            className="position-absolute"
+                                                                        />
+                                                                    </div>
+                                                                    <div>
+                                                                        <p className="h6 milestone_title text-dark">
+                                                                            Picked Up
+                                                                        </p>
+                                                                        <p className="h6 text-muted mb-1 mb-lg-3">
+                                                                            <br />
+                                                                        </p>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div
-                                                            className="timeline-step text-sm-center text-md-start"
-                                                            id="At Destination2"
-                                                        >
-                                                            <div className="timeline-content text-sm-center text-md-start XS-d-flex">
-                                                                <div className="inner-circle">
-                                                                    <img
-                                                                        src="/assets/images/Check.svg"
-                                                                        className="position-absolute"
-                                                                    />
-                                                                </div>
-                                                                <div>
-                                                                    <p className="h6 milestone_title text-dark">
-                                                                        At Destination
-                                                                    </p>
-                                                                    <p className="h6 text-muted mb-1 mb-lg-3">
-                                                                        GHAZIABAD
-                                                                        <br />
-                                                                        Wed, 5th Mar'25 @5:33 PM
-                                                                    </p>
+                                                            <div
+                                                                className="timeline-step text-sm-center text-md-start"
+                                                                id="Accepted2"
+                                                            >
+                                                                <div className="timeline-content text-sm-center text-md-start XS-d-flex">
+                                                                    <div className="inner-circle">
+                                                                        <img
+                                                                            src="/assets/images/Check.svg"
+                                                                            className="position-absolute"
+                                                                        />
+                                                                    </div>
+                                                                    <div>
+                                                                        <p className="h6 milestone_title text-dark">Accepted</p>
+                                                                        <p className="h6 text-muted mb-1 mb-lg-3">
+                                                                            DELHI
+                                                                            <br />
+                                                                            Tue, 4th Mar'25 @10:14 PM
+                                                                        </p>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div
-                                                            className="timeline-step text-sm-center text-md-start"
-                                                            id="RTO Accepted2"
-                                                        >
-                                                            <div className="timeline-content text-sm-center text-md-start XS-d-flex">
-                                                                <div className="inner-circle">
-                                                                    <img
-                                                                        src="/assets/images/Check.svg"
-                                                                        className="position-absolute"
-                                                                    />
+                                                            <div
+                                                                className="timeline-step text-sm-center text-md-start"
+                                                                id="In Transit2"
+                                                            >
+                                                                <div className="timeline-content text-sm-center text-md-start XS-d-flex">
+                                                                    <div className="inner-circle">
+                                                                        <img
+                                                                            src="/assets/images/Check.svg"
+                                                                            className="position-absolute"
+                                                                        />
+                                                                    </div>
+                                                                    <div>
+                                                                        <p className="h6 milestone_title text-dark">
+                                                                            In Transit
+                                                                        </p>
+                                                                        <p className="h6 text-muted mb-1 mb-lg-3">
+                                                                            SAHIBABAD
+                                                                            <br />
+                                                                            Wed, 5th Mar'25 @6:37 AM
+                                                                        </p>
+                                                                    </div>
                                                                 </div>
-                                                                <div>
-                                                                    <p className="h6 milestone_title text-dark">
-                                                                        RTO Accepted
-                                                                    </p>
-                                                                    <p className="h6 text-muted mb-1 mb-lg-3">
-                                                                        GHAZIABAD
-                                                                        <br />
-                                                                        Thu, 6th Mar'25 @2:38 PM
-                                                                    </p>
+                                                            </div>
+                                                            <div
+                                                                className="timeline-step text-sm-center text-md-start"
+                                                                id="At Destination2"
+                                                            >
+                                                                <div className="timeline-content text-sm-center text-md-start XS-d-flex">
+                                                                    <div className="inner-circle">
+                                                                        <img
+                                                                            src="/assets/images/Check.svg"
+                                                                            className="position-absolute"
+                                                                        />
+                                                                    </div>
+                                                                    <div>
+                                                                        <p className="h6 milestone_title text-dark">
+                                                                            At Destination
+                                                                        </p>
+                                                                        <p className="h6 text-muted mb-1 mb-lg-3">
+                                                                            GHAZIABAD
+                                                                            <br />
+                                                                            Wed, 5th Mar'25 @5:33 PM
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                className="timeline-step text-sm-center text-md-start"
+                                                                id="RTO Accepted2"
+                                                            >
+                                                                <div className="timeline-content text-sm-center text-md-start XS-d-flex">
+                                                                    <div className="inner-circle">
+                                                                        <img
+                                                                            src="/assets/images/Check.svg"
+                                                                            className="position-absolute"
+                                                                        />
+                                                                    </div>
+                                                                    <div>
+                                                                        <p className="h6 milestone_title text-dark">
+                                                                            RTO Accepted
+                                                                        </p>
+                                                                        <p className="h6 text-muted mb-1 mb-lg-3">
+                                                                            GHAZIABAD
+                                                                            <br />
+                                                                            Thu, 6th Mar'25 @2:38 PM
+                                                                        </p>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            }
+
                                         </div>
                                     </div>
                                     {/* End Milestone for XS */}
@@ -702,8 +705,8 @@ const Tracking = () => {
                         </div>
                         <div className="row pb-lg-0 pt-3 pb-5" data-id="d24928e">
                             <p className="text-4">
-                                <span style={{ color: "#dc0032" }}>BEWARE OF FRAUD CALLS.</span> DTDC{" "}
-                                <span style={{ color: "#dc0032" }}>won't </span>ask for any payment
+                                <span style={{ color: "#dc0032" }}>BEWARE OF FRAUD CALLS.</span> We{" "}
+                                <span style={{ color: "#dc0032" }}>will naver </span>ask for any payment
                                 through <span style={{ color: "#dc0032" }}>OTP/UPI</span>
                             </p>
                         </div>
