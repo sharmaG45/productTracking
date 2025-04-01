@@ -64,7 +64,7 @@ const Navbar = () => {
     useEffect(() => {
         const checkAuth = () => {
             if (typeof window !== "undefined") {
-                const token = localStorage.getItem("token");
+                const token = localStorage.getItem("currentUser");
                 setIsAuthenticated(!!token);
             }
         };
@@ -75,12 +75,20 @@ const Navbar = () => {
         return () => window.removeEventListener("authChange", checkAuth);
     }, []);
 
+
     const handleLogout = useCallback(() => {
         if (typeof window !== "undefined") {
-            localStorage.removeItem("token");
+            // Remove token from localStorage
+            localStorage.removeItem("currentUser");
+
+            // Set the user as not authenticated
             setIsAuthenticated(false);
+
+            // Dispatch an auth change event
             window.dispatchEvent(new Event("authChange"));
         }
+
+        // Redirect to the homepage or login page
         router.push("/");
     }, [router]);
 

@@ -3,6 +3,9 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FaUserPlus } from "react-icons/fa";
+import { auth, fireStore } from "@/app/_component/firebase/config";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 
 export default function Register() {
     const [form, setForm] = useState({ name: "", email: "", password: "" });
@@ -13,9 +16,9 @@ export default function Register() {
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (token) {
-            router.push("/_component/tracking");
+            router.push("/");
         }
-    }, []);
+    }, [router]);
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -23,20 +26,32 @@ export default function Register() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const res = await fetch("/api/register", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(form),
-        });
+        const { name, email, password } = form; // Use 'form' state variable here
 
-        const data = await res.json();
-        setMessage(data.message || data.error);
+        try {
+            // Register user with Firebase Authentication
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
 
-        if (res.status === 201) {
-            setMessage("Registration successful! Redirecting to login...");
-            setTimeout(() => router.push("/"), 2000);
-        } else if (data.error === "User already exists") {
-            setMessage("User already registered. Please log in.");
+            // Determine role based on email (default 'user', manual for admin)
+            const role = email === "admin@gmail.com" ? "admin" : "user";
+
+            // Store additional user info in Firestore, including role
+            await setDoc(doc(fireStore, "users", user.uid), {
+                username: name, // Store the 'name' as 'username'
+                email,
+                uid: user.uid,
+                role, // Store the user's role
+                createdAt: new Date(),
+            });
+
+            // Show success message (you can add a toast library for this)
+            setMessage("Registration Successful!");
+            localStorage.setItem("token", user.accessToken); // Set token in localStorage
+            router.push("/"); // Redirect after successful registration
+        } catch (error) {
+            console.error("Error during registration:", error);
+            setMessage(`Error: ${error.message}`);
         }
     };
 
@@ -47,7 +62,7 @@ export default function Register() {
                 <div className="hidden md:flex md:w-1/2 bg-blue-500">
                     <img
                         src="/assets/images/bg.png" // Replace with your image path
-                        alt="Login"
+                        alt="Register"
                         className="w-full h-full object-cover"
                     />
                 </div>
@@ -68,6 +83,7 @@ export default function Register() {
                                 name="name"
                                 placeholder="Enter your full name"
                                 className="w-full p-3 border rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none"
+                                value={form.name}
                                 onChange={handleChange}
                                 required
                             />
@@ -79,6 +95,7 @@ export default function Register() {
                                 name="email"
                                 placeholder="Enter your email"
                                 className="w-full p-3 border rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none"
+                                value={form.email}
                                 onChange={handleChange}
                                 required
                             />
@@ -90,6 +107,7 @@ export default function Register() {
                                 name="password"
                                 placeholder="Create a password"
                                 className="w-full p-3 border rounded-lg bg-gray-100 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none"
+                                value={form.password}
                                 onChange={handleChange}
                                 required
                             />
@@ -105,9 +123,9 @@ export default function Register() {
                     {message && <p className="mt-2 text-red-500 text-center">{message}</p>}
 
                     <p className="mt-4 text-center text-gray-600 dark:text-gray-400">
-                        Already have an account? {" "}
+                        Already have an account?{" "}
                         <button
-                            onClick={() => router.push("/home")}
+                            onClick={() => router.push("/home/login")}
                             className="text-blue-500 font-semibold hover:underline"
                         >
                             Login here
@@ -116,6 +134,5 @@ export default function Register() {
                 </div>
             </div>
         </div>
-
     );
 }
