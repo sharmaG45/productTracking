@@ -1,24 +1,29 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
+import React, { useState, useEffect } from 'react';
+import { fireStore } from "@/app/_component/firebase/config";
+import { doc, getDocs, collection, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
 
-const Admin = () => {
+const AdminPanel = () => {
     const [shipments, setShipments] = useState([]);
     const [newShipment, setNewShipment] = useState({
-        tracking_code: "",
-        status: "Pending",
-        type: "",
-        shipping_date: "",
-        shipping_cost: "",
-        reference_no: "",
-        origin: "",
-        destination: "",
-        booked_on: ""
+        reference_no: '',
+        origin: '',
+        destination: '',
+        booked_on: '',
+        shipping_date: '',
+        status: []  // Status will now store an array of status objects
     });
-    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [editingShipment, setEditingShipment] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [customStatus, setCustomStatus] = useState(''); // For custom status input
+    const [isCustomStatusVisible, setIsCustomStatusVisible] = useState(false); // For showing custom input
+    const [newStatus, setNewStatus] = useState({
+        stage: '',
+        location: '',
+        timestamp: '',
+        completed: false
+    });
 
     useEffect(() => {
         fetchShipments();
@@ -26,276 +31,263 @@ const Admin = () => {
 
     const fetchShipments = async () => {
         try {
-            const response = await fetch("/api/admin");
-            const data = await response.json();
-            setShipments(data);
+            const querySnapshot = await getDocs(collection(fireStore, 'shipments'));
+            const shipmentList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            setShipments(shipmentList);
         } catch (error) {
-            console.error("Error fetching shipments:", error);
+            console.error("Error fetching shipments: ", error);
         }
     };
 
     const handleAddShipment = async () => {
         try {
-            const response = await fetch("/api/admin", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(newShipment),
+            // Add shipment to Firestore
+            await addDoc(collection(fireStore, 'shipments'), newShipment);
+            fetchShipments();  // Refresh shipment list
+            setNewShipment({
+                reference_no: '',
+                origin: '',
+                destination: '',
+                booked_on: '',
+                shipping_date: '',
+                status: []  // Reset status field
             });
-
-            if (response.ok) {
-                setNewShipment({
-                    tracking_code: "",
-                    status: "Pending",
-                    type: "",
-                    shipping_date: "",
-                    shipping_cost: "",
-                    reference_no: "",
-                    origin: "",
-                    destination: "",
-                    booked_on: ""
-                });
-                setIsAddModalOpen(false);
-                fetchShipments();
-            } else {
-                console.error("Failed to add shipment");
-            }
+            setIsModalOpen(false);
         } catch (error) {
-            console.error("Error adding shipment:", error);
+            console.error("Error adding shipment: ", error);
         }
     };
-
-
-    // const handleEditShipment = async () => {
-    //     if (!editingShipment.id) {
-    //         console.error("Error: Missing shipment ID");
-    //         return;
-    //     }
-    
-    //     try {
-    //         const response = await fetch("/api/admin", {
-    //             method: "PUT",
-    //             headers: { "Content-Type": "application/json" },
-    //             body: JSON.stringify({ id: editingShipment.id, status: editingShipment.status }),
-    //         });
-    
-    //         const result = await response.json();
-    
-    //         if (response.ok) {
-    //             setIsEditModalOpen(false);
-    //             fetchShipments();
-    //         } else {
-    //             console.error("Failed to update shipment:", result.error);
-    //         }
-    //     } catch (error) {
-    //         console.error("Error updating shipment:", error);
-    //     }
-    // };
 
     const handleEditShipment = async () => {
-        if (!editingShipment.id) {
-            console.error("Error: Missing shipment ID");
-            return;
-        }
-
         try {
-            const statusValue = editingShipment.status === "Other" ? editingShipment.customStatus : editingShipment.status;
-            const response = await fetch("/api/admin", {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ ...editingShipment, status: statusValue }),
-            });
-
-            const result = await response.json();
-
-            if (response.ok) {
-                setIsEditModalOpen(false);
-                fetchShipments();
-            } else {
-                console.error("Failed to update shipment:", result.error);
-            }
+            const shipmentRef = doc(fireStore, 'shipments', editingShipment.id);
+            await updateDoc(shipmentRef, editingShipment);  // Update the shipment
+            fetchShipments();  // Refresh shipment list
+            setEditingShipment(null);
+            setIsModalOpen(false);
         } catch (error) {
-            console.error("Error updating shipment:", error);
+            console.error("Error editing shipment: ", error);
         }
     };
-
 
     const handleDeleteShipment = async (id) => {
         try {
-            const response = await fetch(`/api/admin?id=${id}`, { method: "DELETE" });
-
-            if (response.ok) {
-                fetchShipments();
-            } else {
-                console.error("Failed to delete shipment");
-            }
+            await deleteDoc(doc(fireStore, 'shipments', id));
+            fetchShipments();  // Refresh shipment list
         } catch (error) {
-            console.error("Error deleting shipment:", error);
+            console.error("Error deleting shipment: ", error);
+        }
+    };
+
+    const handleAddNewStatus = () => {
+        if (editingShipment) {
+            setEditingShipment({
+                ...editingShipment,
+                status: [...(editingShipment.status || []), { stage: "", location: "", timestamp: "", completed: false }]
+            });
+        } else {
+            setNewShipment({
+                ...newShipment,
+                status: [...(newShipment.status || []), { stage: "", location: "", timestamp: "", completed: false }]
+            });
+        }
+    };
+
+    const handleRemoveStatus = (index) => {
+        if (editingShipment) {
+            let updatedStatus = [...editingShipment.status];
+            updatedStatus.splice(index, 1);
+            setEditingShipment({ ...editingShipment, status: updatedStatus });
+        } else {
+            let updatedStatus = [...newShipment.status];
+            updatedStatus.splice(index, 1);
+            setNewShipment({ ...newShipment, status: updatedStatus });
         }
     };
 
     return (
-        <div className="flex flex-col md:flex-row h-screen bg-gray-100">
+        <div className="flex h-screen">
             {/* Sidebar */}
-            <aside className="w-full md:w-64 bg-blue-900 text-white p-5 md:h-full">
-                <h2 className="text-xl font-semibold mb-6">Admin Dashboard</h2>
-                <ul>
-                    <li className="p-3 hover:bg-blue-700 rounded cursor-pointer">Dashboard</li>
-                    <li className="p-3 hover:bg-blue-700 rounded cursor-pointer">Shipments</li>
+            <div className="w-full sm:w-1/4 bg-gray-800 text-white p-4 sm:block hidden">
+                <h2 className="text-xl font-bold mb-4">Admin Panel</h2>
+                <ul className="space-y-4">
+                    <li><button onClick={() => setIsModalOpen(true)} className="bg-blue-600 text-white px-4 py-2 rounded w-full">Add Shipment</button></li>
                 </ul>
-            </aside>
+            </div>
 
             {/* Main Content */}
-            <main className="flex-1 p-4 overflow-auto">
-                <div className="flex flex-col md:flex-row justify-between items-center mb-4">
-                    <h1 className="text-xl md:text-2xl font-semibold">Manage Shipments</h1>
-                    <button onClick={() => setIsAddModalOpen(true)} className="bg-green-600 text-white px-4 py-2 rounded flex items-center mt-3 md:mt-0">
-                        <FaPlus className="mr-2" /> Add Shipment
-                    </button>
+            <div className="flex-1 p-6">
+                {/* Topbar */}
+                <div className="flex justify-between items-center mb-4">
+                    <h1 className="text-2xl font-bold">Shipment Management</h1>
+                    <button onClick={() => setIsModalOpen(true)} className="bg-blue-600 text-white px-4 py-2 rounded sm:hidden">Add Shipment</button>
                 </div>
 
-                {/* Shipment Table */}
-                <div className="bg-white shadow-md rounded-lg overflow-x-auto p-4">
-                    <table className="w-full border border-gray-300">
-                        <thead className="bg-gray-200 text-gray-700">
-                            <tr>
-                                {["Tracking Code", "Reference No", "Origin", "Destination", "Status", "Type", "Shipping Date", "Cost ($)", "Actions"].map((header) => (
-                                    <th key={header} className="p-3 text-left border-b">
-                                        {header}
-                                    </th>
-                                ))}
+                <table className="w-full mt-4 border border-gray-300">
+                    <thead>
+                        <tr className="bg-gray-200">
+                            <th className="p-3">Tracking Code</th>
+                            <th className="p-3">Origin</th>
+                            <th className="p-3">Destination</th>
+                            <th className="p-3">Booked On</th>
+                            <th className="p-3">Shipping Date</th>
+                            <th className="p-3">Status</th> {/* Display the status */}
+                            <th className="p-3">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {shipments.map(shipment => (
+                            <tr key={shipment.id} className="border-b">
+                                <td className="p-3">{shipment.reference_no}</td>
+                                <td className="p-3">{shipment.origin}</td>
+                                <td className="p-3">{shipment.destination}</td>
+                                <td className="p-3">{shipment.booked_on}</td>
+                                <td className="p-3">{shipment.shipping_date}</td>
+                                <td className="p-3">
+                                    {/* Display status as an array of stages */}
+                                    {shipment.status.map((status, index) => (
+                                        <div key={index}>
+                                            <strong>{status.stage}</strong> - {status.location} ({status.timestamp}) - {status.completed ? 'Completed' : 'Pending'}
+                                        </div>
+                                    ))}
+                                </td>
+                                <td className="p-3">
+                                    <button onClick={() => { setEditingShipment(shipment); setIsModalOpen(true); }} className="bg-yellow-500 text-white px-3 py-1 rounded">Edit</button>
+                                    <button onClick={() => handleDeleteShipment(shipment.id)} className="bg-red-600 text-white px-3 py-1 rounded ml-2">Delete</button>
+                                </td>
                             </tr>
-                        </thead>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
 
-                        <tbody>
-                            {shipments.length > 0 ? (
-                                shipments.map((shipment, index) => (
-                                    <tr key={shipment.id} className={`border-b ${index % 2 === 0 ? "bg-gray-100" : "bg-white"}`}>
-                                        <td className="p-3">{shipment.tracking_code}</td>
-                                        <td className="p-3">{shipment.reference_no}</td>
-                                        <td className="p-3">{shipment.origin}</td>
-                                        <td className="p-3">{shipment.destination}</td>
-                                        <td className={`p-3 font-semibold ${shipment.status === "Delivered" ? "text-green-600" : shipment.status === "In Transit" ? "text-blue-600" : "text-orange-600"}`}>
-                                            {shipment.status}
-                                        </td>
-                                        <td className="p-3">{shipment.type}</td>
-                                        <td className="p-3">{shipment.shipping_date}</td>
-                                        <td className="p-3 font-medium">${shipment.shipping_cost}</td>
-                                        <td className="p-3 flex space-x-2">
-                                            <button
-                                                onClick={() => { setEditingShipment(shipment); setIsEditModalOpen(true); }}
-                                                className="bg-yellow-500 text-white px-3 py-1 rounded flex items-center gap-1 hover:bg-yellow-600 transition">
-                                                <FaEdit /> Edit
-                                            </button>
-                                            <button
-                                                onClick={() => handleDeleteShipment(shipment.id)}
-                                                className="bg-red-600 text-white px-3 py-1 rounded flex items-center gap-1 hover:bg-red-700 transition">
-                                                <FaTrash /> Delete
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan="9" className="text-center py-5 text-gray-500">No shipments found</td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+            {/* Modal for Add/Edit Shipment */}
+            {isModalOpen && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4">
+                    <div className="bg-white p-6 rounded-lg w-full max-w-md md:max-w-lg lg:max-w-xl max-h-[90vh] overflow-auto">
+                        <h2 className="text-lg font-bold mb-4">{editingShipment ? 'Edit Shipment' : 'Add Shipment'}</h2>
 
-                {/* Add/Edit Shipment Modal */}
-                {(isAddModalOpen || isEditModalOpen) && (
-                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 px-4 z-50">
-                        <div className="bg-white p-5 sm:p-6 md:p-8 rounded-2xl shadow-lg w-[90%] max-w-xs sm:max-w-md md:max-w-lg animate-fadeIn overflow-y-auto max-h-[90vh]">
-                            <h2 className="text-lg sm:text-xl font-bold text-center mb-4">
-                                {isEditModalOpen ? "Edit Shipment" : "Add Shipment"}
-                            </h2>
-                            <form>
-                                {["tracking_code", "type", "shipping_date", "shipping_cost"].map((field) => (
-                                    <div key={field} className="mb-4">
-                                        <label className="block capitalize text-sm font-semibold">{field.replace("_", " ")}</label>
-                                        <input
-                                            type={field === "shipping_date" ? "date" : "text"}
-                                            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-                                            value={isEditModalOpen ? editingShipment[field] : newShipment[field]}
-                                            onChange={(e) => {
-                                                if (isEditModalOpen) setEditingShipment({ ...editingShipment, [field]: e.target.value });
-                                                else setNewShipment({ ...newShipment, [field]: e.target.value });
-                                            }}
-                                        />
-                                    </div>
-                                ))}
+                        {/* Basic Shipment Fields */}
+                        <input
+                            type="text"
+                            placeholder="Reference No"
+                            value={editingShipment ? editingShipment.reference_no : newShipment.reference_no}
+                            onChange={(e) => editingShipment ? setEditingShipment({ ...editingShipment, reference_no: e.target.value }) : setNewShipment({ ...newShipment, reference_no: e.target.value })}
+                            className="border p-2 w-full mb-2"
+                        />
+                        <input
+                            type="text"
+                            placeholder="Origin"
+                            value={editingShipment ? editingShipment.origin : newShipment.origin}
+                            onChange={(e) => editingShipment ? setEditingShipment({ ...editingShipment, origin: e.target.value }) : setNewShipment({ ...newShipment, origin: e.target.value })}
+                            className="border p-2 w-full mb-2"
+                        />
+                        <input
+                            type="text"
+                            placeholder="Destination"
+                            value={editingShipment ? editingShipment.destination : newShipment.destination}
+                            onChange={(e) => editingShipment ? setEditingShipment({ ...editingShipment, destination: e.target.value }) : setNewShipment({ ...newShipment, destination: e.target.value })}
+                            className="border p-2 w-full mb-2"
+                        />
+                        <input
+                            type="date"
+                            placeholder="Booked On"
+                            value={editingShipment ? editingShipment.booked_on : newShipment.booked_on}
+                            onChange={(e) => editingShipment ? setEditingShipment({ ...editingShipment, booked_on: e.target.value }) : setNewShipment({ ...newShipment, booked_on: e.target.value })}
+                            className="border p-2 w-full mb-2"
+                        />
+                        <input
+                            type="date"
+                            placeholder="Shipping Date"
+                            value={editingShipment ? editingShipment.shipping_date : newShipment.shipping_date}
+                            onChange={(e) => editingShipment ? setEditingShipment({ ...editingShipment, shipping_date: e.target.value }) : setNewShipment({ ...newShipment, shipping_date: e.target.value })}
+                            className="border p-2 w-full mb-2"
+                        />
 
-                                <label className="block mt-3 mb-2 text-sm font-semibold">Status</label>
-                                <select
-                                    className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-                                    value={isEditModalOpen ? editingShipment.status : newShipment.status}
-                                    onChange={(e) => {
-                                        if (isEditModalOpen) setEditingShipment({ ...editingShipment, status: e.target.value, customStatus: "" });
-                                        else setNewShipment({ ...newShipment, status: e.target.value, customStatus: "" });
-                                    }}
-                                >
-                                    <option value="Pending">Pending</option>
-                                    <option value="In Transit">In Transit</option>
-                                    <option value="Delivered">Delivered</option>
-                                    <option value="Other">Other</option>
-                                </select>
-
-                                {(isEditModalOpen ? editingShipment.status : newShipment.status) === "Other" && (
+                        {/* Add/Edit Shipment Status */}
+                        <h3 className="text-lg font-semibold mt-4 mb-2">Add/Edit Shipment Status</h3>
+                        <div className="space-y-4">
+                            {(editingShipment ? editingShipment.status : newShipment.status || []).map((status, index) => (
+                                <div key={index} className="relative border p-2 mb-2">
+                                    <button
+                                        onClick={() => handleRemoveStatus(index)}
+                                        className="absolute top-0 right-0 bg-red-600 text-white px-2 py-1 rounded text-xs"
+                                    >
+                                        Remove
+                                    </button>
                                     <input
                                         type="text"
-                                        placeholder="Enter custom status"
-                                        className="w-full p-3 mt-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-                                        value={isEditModalOpen ? editingShipment.customStatus : newShipment.customStatus}
+                                        placeholder="Stage"
+                                        value={status.stage}
                                         onChange={(e) => {
-                                            if (isEditModalOpen) setEditingShipment({ ...editingShipment, customStatus: e.target.value });
-                                            else setNewShipment({ ...newShipment, customStatus: e.target.value });
+                                            let updatedStatus = [...(editingShipment ? editingShipment.status : newShipment.status)];
+                                            updatedStatus[index].stage = e.target.value;
+                                            editingShipment ? setEditingShipment({ ...editingShipment, status: updatedStatus }) : setNewShipment({ ...newShipment, status: updatedStatus });
                                         }}
+                                        className="border p-2 w-full mb-2"
                                     />
-                                )}
-
-                                {["origin", "destination", "reference_no", "booked_on"].map((field) => (
-                                    <div key={field} className="mt-3">
-                                        <label className="block mb-2 text-sm font-semibold capitalize">{field.replace("_", " ")}</label>
+                                    <input
+                                        type="text"
+                                        placeholder="Location"
+                                        value={status.location}
+                                        onChange={(e) => {
+                                            let updatedStatus = [...(editingShipment ? editingShipment.status : newShipment.status)];
+                                            updatedStatus[index].location = e.target.value;
+                                            editingShipment ? setEditingShipment({ ...editingShipment, status: updatedStatus }) : setNewShipment({ ...newShipment, status: updatedStatus });
+                                        }}
+                                        className="border p-2 w-full mb-2"
+                                    />
+                                    <input
+                                        type="datetime-local"
+                                        placeholder="Timestamp"
+                                        value={status.timestamp}
+                                        onChange={(e) => {
+                                            let updatedStatus = [...(editingShipment ? editingShipment.status : newShipment.status)];
+                                            updatedStatus[index].timestamp = e.target.value;
+                                            editingShipment ? setEditingShipment({ ...editingShipment, status: updatedStatus }) : setNewShipment({ ...newShipment, status: updatedStatus });
+                                        }}
+                                        className="border p-2 w-full mb-2"
+                                    />
+                                    <label>
                                         <input
-                                            type={field === "booked_on" ? "date" : "text"}
-                                            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-                                            value={isEditModalOpen ? editingShipment[field] : newShipment[field]}
+                                            type="checkbox"
+                                            checked={status.completed}
                                             onChange={(e) => {
-                                                if (isEditModalOpen) setEditingShipment({ ...editingShipment, [field]: e.target.value });
-                                                else setNewShipment({ ...newShipment, [field]: e.target.value });
+                                                let updatedStatus = [...(editingShipment ? editingShipment.status : newShipment.status)];
+                                                updatedStatus[index].completed = e.target.checked;
+                                                editingShipment ? setEditingShipment({ ...editingShipment, status: updatedStatus }) : setNewShipment({ ...newShipment, status: updatedStatus });
                                             }}
                                         />
-                                    </div>
-                                ))}
-
-                                <div className="mt-6 flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3">
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            setIsAddModalOpen(false);
-                                            setIsEditModalOpen(false);
-                                        }}
-                                        className="bg-gray-400 text-white px-5 py-2 rounded-lg hover:bg-gray-500 transition w-full sm:w-auto"
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={isEditModalOpen ? handleEditShipment : handleAddShipment}
-                                        className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition w-full sm:w-auto"
-                                    >
-                                        {isEditModalOpen ? "Update" : "Add"}
-                                    </button>
+                                        Completed
+                                    </label>
                                 </div>
-                            </form>
+                            ))}
+                        </div>
+
+                        {/* Add New Status Button */}
+                        <button
+                            onClick={handleAddNewStatus}
+                            className="bg-blue-600 text-white px-4 py-2 mt-2 rounded"
+                        >
+                            Add Status
+                        </button>
+
+                        {/* Modal Action Buttons */}
+                        <div className="flex justify-end space-x-2 mt-4">
+                            <button onClick={() => setIsModalOpen(false)} className="bg-gray-400 text-white px-4 py-2 rounded">Cancel</button>
+                            <button
+                                onClick={editingShipment ? handleEditShipment : handleAddShipment}
+                                className="bg-blue-600 text-white px-4 py-2 rounded"
+                            >
+                                {editingShipment ? 'Update' : 'Add'}
+                            </button>
                         </div>
                     </div>
-                )}
+                </div>
+            )}
 
-            </main>
         </div>
     );
 };
 
-export default Admin;
+export default AdminPanel;
