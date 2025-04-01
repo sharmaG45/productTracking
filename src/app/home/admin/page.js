@@ -64,6 +64,33 @@ const Admin = () => {
         }
     };
 
+
+    // const handleEditShipment = async () => {
+    //     if (!editingShipment.id) {
+    //         console.error("Error: Missing shipment ID");
+    //         return;
+    //     }
+    
+    //     try {
+    //         const response = await fetch("/api/admin", {
+    //             method: "PUT",
+    //             headers: { "Content-Type": "application/json" },
+    //             body: JSON.stringify({ id: editingShipment.id, status: editingShipment.status }),
+    //         });
+    
+    //         const result = await response.json();
+    
+    //         if (response.ok) {
+    //             setIsEditModalOpen(false);
+    //             fetchShipments();
+    //         } else {
+    //             console.error("Failed to update shipment:", result.error);
+    //         }
+    //     } catch (error) {
+    //         console.error("Error updating shipment:", error);
+    //     }
+    // };
+
     const handleEditShipment = async () => {
         if (!editingShipment.id) {
             console.error("Error: Missing shipment ID");
@@ -71,10 +98,11 @@ const Admin = () => {
         }
 
         try {
+            const statusValue = editingShipment.status === "Other" ? editingShipment.customStatus : editingShipment.status;
             const response = await fetch("/api/admin", {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(editingShipment),
+                body: JSON.stringify({ ...editingShipment, status: statusValue }),
             });
 
             const result = await response.json();
@@ -203,14 +231,28 @@ const Admin = () => {
                                     className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
                                     value={isEditModalOpen ? editingShipment.status : newShipment.status}
                                     onChange={(e) => {
-                                        if (isEditModalOpen) setEditingShipment({ ...editingShipment, status: e.target.value });
-                                        else setNewShipment({ ...newShipment, status: e.target.value });
+                                        if (isEditModalOpen) setEditingShipment({ ...editingShipment, status: e.target.value, customStatus: "" });
+                                        else setNewShipment({ ...newShipment, status: e.target.value, customStatus: "" });
                                     }}
                                 >
                                     <option value="Pending">Pending</option>
                                     <option value="In Transit">In Transit</option>
                                     <option value="Delivered">Delivered</option>
+                                    <option value="Other">Other</option>
                                 </select>
+
+                                {(isEditModalOpen ? editingShipment.status : newShipment.status) === "Other" && (
+                                    <input
+                                        type="text"
+                                        placeholder="Enter custom status"
+                                        className="w-full p-3 mt-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                                        value={isEditModalOpen ? editingShipment.customStatus : newShipment.customStatus}
+                                        onChange={(e) => {
+                                            if (isEditModalOpen) setEditingShipment({ ...editingShipment, customStatus: e.target.value });
+                                            else setNewShipment({ ...newShipment, customStatus: e.target.value });
+                                        }}
+                                    />
+                                )}
 
                                 {["origin", "destination", "reference_no", "booked_on"].map((field) => (
                                     <div key={field} className="mt-3">

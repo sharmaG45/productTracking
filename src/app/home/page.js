@@ -82,7 +82,7 @@ const Tracking = () => {
                                     <div className="row">
                                         <div className="col-lg-6 mb-4 mb-lg-0">
                                             <h4 className="form-label text-4">
-                                                To track your consignment, please enter your tracking number (Reference Number).
+                                                To track your consignment, please enter your tracking number (AWB/ CONSIGNMENT NUMBER).
                                             </h4>
                                             <div className="row pt-2">
                                                 <div className="form-group col">
@@ -112,7 +112,7 @@ const Tracking = () => {
                                                                 defaultValue="referenceNo"
                                                                 required=""
                                                             />
-                                                            REFERENCE NUMBER
+                                                         AWB/ CONSIGNMENT NUMBER
                                                         </label>
                                                     </div>
                                                 </div>
