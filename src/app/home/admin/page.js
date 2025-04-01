@@ -106,64 +106,71 @@ const AdminPanel = () => {
     };
 
     return (
-        <div className="flex h-screen">
-            {/* Sidebar */}
-            <div className="w-full sm:w-1/4 bg-gray-800 text-white p-4 sm:block hidden">
-                <h2 className="text-xl font-bold mb-4">Admin Panel</h2>
-                <ul className="space-y-4">
-                    <li><button onClick={() => setIsModalOpen(true)} className="bg-blue-600 text-white px-4 py-2 rounded w-full">Add Shipment</button></li>
-                </ul>
-            </div>
 
-            {/* Main Content */}
-            <div className="flex-1 p-6">
-                {/* Topbar */}
-                <div className="flex justify-between items-center mb-4">
-                    <h1 className="text-2xl font-bold">Shipment Management</h1>
-                    <button onClick={() => setIsModalOpen(true)} className="bg-blue-600 text-white px-4 py-2 rounded sm:hidden">Add Shipment</button>
+        <>
+
+            <div className="flex h-screen">
+                {/* Sidebar */}
+                <div className="w-full sm:w-1/5 bg-gray-800 text-white p-4 sm:block hidden">
+                    <h2 className="text-xl font-bold mb-4">Admin Panel</h2>
+                    <ul className="space-y-4">
+                        <li><button onClick={() => setIsModalOpen(true)} className="bg-blue-600 text-white px-4 py-2 rounded w-full">Add Shipment</button></li>
+                    </ul>
                 </div>
 
-                <table className="w-full mt-4 border border-gray-300">
-                    <thead>
-                        <tr className="bg-gray-200">
-                            <th className="p-3">Tracking Code</th>
-                            <th className="p-3">Origin</th>
-                            <th className="p-3">Destination</th>
-                            <th className="p-3">Booked On</th>
-                            <th className="p-3">Shipping Date</th>
-                            <th className="p-3">Status</th> {/* Display the status */}
-                            <th className="p-3">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {shipments.map(shipment => (
-                            <tr key={shipment.id} className="border-b">
-                                <td className="p-3">{shipment.reference_no}</td>
-                                <td className="p-3">{shipment.origin}</td>
-                                <td className="p-3">{shipment.destination}</td>
-                                <td className="p-3">{shipment.booked_on}</td>
-                                <td className="p-3">{shipment.shipping_date}</td>
-                                <td className="p-3">
-                                    {/* Display status as an array of stages */}
-                                    {shipment.status.map((status, index) => (
-                                        <div key={index}>
-                                            <strong>{status.stage}</strong> - {status.location} ({status.timestamp}) - {status.completed ? 'Completed' : 'Pending'}
-                                        </div>
-                                    ))}
-                                </td>
-                                <td className="p-3">
-                                    <button onClick={() => { setEditingShipment(shipment); setIsModalOpen(true); }} className="bg-yellow-500 text-white px-3 py-1 rounded">Edit</button>
-                                    <button onClick={() => handleDeleteShipment(shipment.id)} className="bg-red-600 text-white px-3 py-1 rounded ml-2">Delete</button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                {/* Main Content */}
+                <div className="flex-1 p-4 overflow-auto">
+                    {/* Topbar */}
+                    <div className="flex justify-between items-center mb-4">
+                        <h1 className="text-xl sm:text-2xl font-bold">Shipment Management</h1>
+                        <button onClick={() => setIsModalOpen(true)} className="bg-blue-600 text-white px-4 py-2 rounded sm:hidden">Add Shipment</button>
+                    </div>
+
+                    <div className="overflow-x-auto">
+                        <table className="w-full border border-gray-300">
+                            <thead>
+                                <tr className="bg-gray-200">
+                                    <th className="p-3">Tracking Code</th>
+                                    <th className="p-3">Origin</th>
+                                    <th className="p-3">Destination</th>
+                                    <th className="p-3">Booked On</th>
+                                    <th className="p-3">Shipping Date</th>
+                                    <th className="p-3">Status</th> {/* Display the status */}
+                                    <th className="p-3">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {shipments.map(shipment => (
+                                    <tr key={shipment.id} className="border-b text-xs sm:text-sm">
+                                        <td className="p-3">{shipment.reference_no}</td>
+                                        <td className="p-3">{shipment.origin}</td>
+                                        <td className="p-3">{shipment.destination}</td>
+                                        <td className="p-3">{shipment.booked_on}</td>
+                                        <td className="p-3">{shipment.shipping_date}</td>
+                                        <td className="p-3">
+                                            {/* Display status as an array of stages */}
+                                            {shipment.status.map((status, index) => (
+                                                <div key={index}>
+                                                    <strong>{status.stage}</strong> - {status.location} ({status.timestamp}) - {status.completed ? 'Completed' : 'Pending'}
+                                                </div>
+                                            ))}
+                                        </td>
+                                        <td className="p-3">
+                                            <button onClick={() => { setEditingShipment(shipment); setIsModalOpen(true); }} className="bg-yellow-500 text-white px-3 py-1 rounded">Edit</button>
+                                            <button onClick={() => handleDeleteShipment(shipment.id)} className="bg-red-600 text-white px-3 py-1 rounded ml-2">Delete</button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
+
 
             {/* Modal for Add/Edit Shipment */}
             {isModalOpen && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4">
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4 ">
                     <div className="bg-white p-6 rounded-lg w-full max-w-md md:max-w-lg lg:max-w-xl max-h-[90vh] overflow-auto">
                         <h2 className="text-lg font-bold mb-4">{editingShipment ? 'Edit Shipment' : 'Add Shipment'}</h2>
 
@@ -208,10 +215,10 @@ const AdminPanel = () => {
                         <h3 className="text-lg font-semibold mt-4 mb-2">Add/Edit Shipment Status</h3>
                         <div className="space-y-4">
                             {(editingShipment ? editingShipment.status : newShipment.status || []).map((status, index) => (
-                                <div key={index} className="relative border p-2 mb-2">
+                                <div key={index} className="relative border p-4 mb-4">
                                     <button
                                         onClick={() => handleRemoveStatus(index)}
-                                        className="absolute top-0 right-0 bg-red-600 text-white px-2 py-1 rounded text-xs"
+                                        className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded text-xs"
                                     >
                                         Remove
                                     </button>
@@ -224,7 +231,7 @@ const AdminPanel = () => {
                                             updatedStatus[index].stage = e.target.value;
                                             editingShipment ? setEditingShipment({ ...editingShipment, status: updatedStatus }) : setNewShipment({ ...newShipment, status: updatedStatus });
                                         }}
-                                        className="border p-2 w-full mb-2"
+                                        className="border p-3 w-full md:w-[90%] mx-auto mb-4 text-sm"
                                     />
                                     <input
                                         type="text"
@@ -235,7 +242,7 @@ const AdminPanel = () => {
                                             updatedStatus[index].location = e.target.value;
                                             editingShipment ? setEditingShipment({ ...editingShipment, status: updatedStatus }) : setNewShipment({ ...newShipment, status: updatedStatus });
                                         }}
-                                        className="border p-2 w-full mb-2"
+                                        className="border p-3 w-full md:w-[90%] mx-auto mb-4 text-sm"
                                     />
                                     <input
                                         type="datetime-local"
@@ -246,12 +253,13 @@ const AdminPanel = () => {
                                             updatedStatus[index].timestamp = e.target.value;
                                             editingShipment ? setEditingShipment({ ...editingShipment, status: updatedStatus }) : setNewShipment({ ...newShipment, status: updatedStatus });
                                         }}
-                                        className="border p-2 w-full mb-2"
+                                        className="border p-3 w-full md:w-[90%] mx-auto mb-4 text-sm"
                                     />
                                     <label>
                                         <input
                                             type="checkbox"
                                             checked={status.completed}
+                                            className='mr-2'
                                             onChange={(e) => {
                                                 let updatedStatus = [...(editingShipment ? editingShipment.status : newShipment.status)];
                                                 updatedStatus[index].completed = e.target.checked;
@@ -285,8 +293,10 @@ const AdminPanel = () => {
                     </div>
                 </div>
             )}
+        </>
 
-        </div>
+
+
     );
 };
 

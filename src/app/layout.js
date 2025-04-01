@@ -15,7 +15,7 @@ export default function RootLayout({ children }) {
       <head>
         <link rel="stylesheet" href="/assets/images/stylesheet/style.css" />
       </head>
-      <body>
+      <body >
         <Navbar />
         {children}
         <Footer />

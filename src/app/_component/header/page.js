@@ -52,15 +52,6 @@ const Navbar = () => {
         },
     ];
 
-
-    useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 50);
-        };
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
-
     useEffect(() => {
         const checkAuth = () => {
             if (typeof window !== "undefined") {
@@ -70,27 +61,22 @@ const Navbar = () => {
         };
 
         checkAuth();
-        window.addEventListener("authChange", checkAuth);
 
-        return () => window.removeEventListener("authChange", checkAuth);
+        // Listen for auth changes
+        const handleAuthChange = () => checkAuth();
+        window.addEventListener("authChange", handleAuthChange);
+
+        return () => window.removeEventListener("authChange", handleAuthChange);
     }, []);
 
-
-    const handleLogout = useCallback(() => {
+    const handleLogout = () => {
         if (typeof window !== "undefined") {
-            // Remove token from localStorage
             localStorage.removeItem("currentUser");
-
-            // Set the user as not authenticated
             setIsAuthenticated(false);
-
-            // Dispatch an auth change event
-            window.dispatchEvent(new Event("authChange"));
+            router.push('/');
+            window.dispatchEvent(new Event("authChange")); // Notify other components
         }
-
-        // Redirect to the homepage or login page
-        router.push("/");
-    }, [router]);
+    };
 
     return (
         <nav className={`p-4 sticky top-0 z-50 transition-all duration-300 ${isScrolled ? "bg-gray-900 text-white shadow-lg" : "bg-white shadow-md"}`}>

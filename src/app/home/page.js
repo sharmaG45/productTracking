@@ -40,10 +40,8 @@ const Tracking = () => {
     };
 
     return (
-
         <>
-
-            <div className="container">
+            <div className="min-h-screen container mx-auto px-4 py-6 ">
                 <div className="row pt-5 ">
                     <div className="col">
                         <div className="row">
@@ -172,306 +170,278 @@ const Tracking = () => {
                         </div>
                     </div>
                 </div>
-            </div>
 
+                {/* Error Message */}
 
+                {error && <p className="text-red-500 mt-2">{error}</p>}
 
+                {/* Tracking Details */}
+                {shipmentDetails && (
+                    <>
+                        <div className="container">
 
-            {/* Input and Button */}
-            {/* <div className="flex flex-col md:flex-row gap-2">
-                    <input
-                        type="text"
-                        className="border p-3 rounded-lg w-full md:w-3/4 bg-gray-100 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
-                        placeholder="Enter Tracking Code"
-                        value={trackingCode}
-                        onChange={(e) => setTrackingCode(e.target.value)}
-                    />
-                    <button
-                        onClick={fetchTrackingData}
-                        className="bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition"
-                    >
-                        Track
-                    </button>
-                </div> */}
+                            <div className="container-fluid p-0" id="printdiv">
+                                <div
+                                    className="header_content d-md-flex justify-content-between align-items-center p-2"
+                                    style={{ backgroundColor: "#0E2C53" }}
+                                >
+                                    <div className="tracking_details d-flex gap-2">
+                                        <h5 className="text-white m-0">
+                                            Tracking Details : <span className="h6">{shipmentDetails.reference_no}</span>
+                                        </h5>
+                                        {/*<p class="text-white m-0">I14566497</p>*/}
+                                    </div>
+                                    <div className="tracking_icons">
+                                        <ul className="list-unstyled m-0 d-flex gap-3 ">
 
+                                            <li>
+                                                <a
+                                                    href="raise_a_service_query.asp"
+                                                    className="text-decoration-none text-white"
+                                                >
+                                                    {" "}
+                                                    Raise your Query
+                                                </a>
+                                                <img src="/assets/images/edit_icon.svg" style={{ width: "16%" }} />
+                                            </li>
 
-
-
-
-            {/* Error Message */}
-            {error && <p className="text-red-500 mt-2">{error}</p>}
-
-            {/* Tracking Details */}
-            {shipmentDetails && (
-                <>
-
-                    <div className="container">
-
-                        <div className="container-fluid p-0" id="printdiv">
-                            <div
-                                className="header_content d-md-flex justify-content-between align-items-center p-2"
-                                style={{ backgroundColor: "#0E2C53" }}
-                            >
-                                <div className="tracking_details d-flex gap-2">
-                                    <h5 className="text-white m-0">
-                                        Tracking Details : <span className="h6">{shipmentDetails.reference_no}</span>
-                                    </h5>
-                                    {/*<p class="text-white m-0">I14566497</p>*/}
-                                </div>
-                                <div className="tracking_icons">
-                                    <ul className="list-unstyled m-0 d-flex gap-3 ">
-                                        {/*<li><a href="#" class="text-decoration-none text-white" data-bs-toggle="modal" data-bs-target="#exampleModal"> 
-                <img src="img/mail_me_1.svg">Mail me</a>
-             </li>*/}
-                                        <li>
-                                            <a
-                                                href="raise_a_service_query.asp"
-                                                className="text-decoration-none text-white"
-                                            >
-                                                {" "}
-                                                Raise your Query
-                                            </a>
-                                            <img src="/assets/images/edit_icon.svg" style={{ width: "16%" }} />
-                                        </li>
-                                        {/*<li><a href="javascript:window.print()"  class="text-decoration-none text-white">
-                <img src="img/print_1.svg">Print</a>
-             </li>*/}
-                                    </ul>
-                                    {/* Modal */}
-                                    <div
-                                        className="modal fade"
-                                        id="exampleModal"
-                                        tabIndex={-1}
-                                        aria-labelledby="exampleModalLabel"
-                                        aria-hidden="true"
-                                    >
-                                        <div className="modal-dialog modal-dialog-centered justify-content-center">
-                                            <div className="modal-content w-75">
-                                                <div className="modal-header">
-                                                    <h5 className="modal-title" id="exampleModalLabel">
-                                                        Mail Me
-                                                    </h5>
-                                                    <button
-                                                        type="button"
-                                                        className="btn-close"
-                                                        data-bs-dismiss="modal"
-                                                        aria-label="Close"
-                                                    />
+                                        </ul>
+                                        {/* Modal */}
+                                        <div
+                                            className="modal fade"
+                                            id="exampleModal"
+                                            tabIndex={-1}
+                                            aria-labelledby="exampleModalLabel"
+                                            aria-hidden="true"
+                                        >
+                                            <div className="modal-dialog modal-dialog-centered justify-content-center">
+                                                <div className="modal-content w-75">
+                                                    <div className="modal-header">
+                                                        <h5 className="modal-title" id="exampleModalLabel">
+                                                            Mail Me
+                                                        </h5>
+                                                        <button
+                                                            type="button"
+                                                            className="btn-close"
+                                                            data-bs-dismiss="modal"
+                                                            aria-label="Close"
+                                                        />
+                                                    </div>
+                                                    <div className="modal-body">
+                                                        <form className="row g-3">
+                                                            <div className="col-auto">
+                                                                <div className="mb-3">
+                                                                    <input
+                                                                        type="email"
+                                                                        className="form-control"
+                                                                        id="exampleFormControlInput1"
+                                                                        placeholder="Enter Email Id"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-auto">
+                                                                <button type="submit" className="btn btn-primary mb-3">
+                                                                    Submit
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
                                                 </div>
-                                                <div className="modal-body">
-                                                    <form className="row g-3">
-                                                        <div className="col-auto">
-                                                            <div className="mb-3">
-                                                                <input
-                                                                    type="email"
-                                                                    className="form-control"
-                                                                    id="exampleFormControlInput1"
-                                                                    placeholder="Enter Email Id"
-                                                                />
+                                            </div>
+                                        </div>
+                                        {/* End Modal */}
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-lg-9 col-md-9 col-sm-12">
+                                        {/* Header summary */}
+                                        <div className="row my-4 mb-2">
+                                            <div className="header_summary_main d-md-flex d-sm-flex text-break">
+                                                <div className="reference_no w-sm-50 float-start mb-2 w-25">
+                                                    <div className="reference_no">
+                                                        <p className="h6 text-muted mb-1 mb-lg-3">Reference No</p>
+                                                        <p className="h6 milestone_title text-dark">{shipmentDetails.reference_no}</p>
+                                                    </div>
+                                                </div>
+                                                <div className="origin w-sm-50 float-start mb-2 w-25">
+                                                    <div className="reference_no">
+                                                        <p className="h6 text-muted mb-1 mb-lg-3">Origin</p>
+                                                        <p className="h6 milestone_title text-dark">{shipmentDetails.origin}</p>
+                                                    </div>
+                                                </div>
+                                                <div className="destination w-sm-50 float-start mb-2 w-25">
+                                                    <div className="reference_no">
+                                                        <p className="h6 text-muted mb-1 mb-lg-3">Destination</p>
+                                                        <p className="h6 milestone_title text-dark">
+                                                            {shipmentDetails.destination}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div className="booked_on w-sm-50 float-start mb-2 w-25">
+                                                    <div className="reference_no">
+                                                        <p className="h6 text-muted mb-1 mb-lg-3">Booked On</p>
+                                                        <p className="h6 milestone_title text-dark">
+                                                            {new Date(shipmentDetails.booked_on).toLocaleDateString()}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {/* End Header summary */}
+                                        <div className="timeline-steps d-md-flex justify-content-md-between justify-content-lg-between milestone-tracker-XS">
+                                            {shipmentDetails.status && shipmentDetails.status.length > 0 ? (
+                                                shipmentDetails.status.map((status, index) => (
+                                                    <div
+                                                        className="timeline-step text-sm-center text-md-start"
+                                                        key={index}
+                                                    >
+                                                        <div className="timeline-content text-sm-center text-md-start XS-d-flex">
+                                                            <div className="inner-circle">
+                                                                {status.completed && (
+                                                                    <img
+                                                                        src="/assets/images/Check.svg"
+                                                                        className="position-absolute" alt="Completed"
+                                                                    />
+                                                                )}
+
+                                                            </div>
+                                                            <div>
+                                                                <p className="h6 milestone_title text-dark">
+                                                                    {status.stage}
+                                                                </p>
+                                                                <p className="h6 text-muted mb-1 mb-lg-3">
+                                                                    {status.location}
+                                                                    <br />
+                                                                    {new Date(status.timestamp).toLocaleString()}
+                                                                </p>
                                                             </div>
                                                         </div>
-                                                        <div className="col-auto">
-                                                            <button type="submit" className="btn btn-primary mb-3">
-                                                                Submit
-                                                            </button>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {/* End Modal */}
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-lg-9 col-md-9 col-sm-12">
-                                    {/* Header summary */}
-                                    <div className="row my-4 mb-2">
-                                        <div className="header_summary_main d-md-flex d-sm-flex text-break">
-                                            <div className="reference_no w-sm-50 float-start mb-2 w-25">
-                                                <div className="reference_no">
-                                                    <p className="h6 text-muted mb-1 mb-lg-3">Reference No</p>
-                                                    <p className="h6 milestone_title text-dark">{shipmentDetails.reference_no}</p>
-                                                </div>
-                                            </div>
-                                            <div className="origin w-sm-50 float-start mb-2 w-25">
-                                                <div className="reference_no">
-                                                    <p className="h6 text-muted mb-1 mb-lg-3">Origin</p>
-                                                    <p className="h6 milestone_title text-dark">{shipmentDetails.origin}</p>
-                                                </div>
-                                            </div>
-                                            <div className="destination w-sm-50 float-start mb-2 w-25">
-                                                <div className="reference_no">
-                                                    <p className="h6 text-muted mb-1 mb-lg-3">Destination</p>
-                                                    <p className="h6 milestone_title text-dark">
-                                                        {shipmentDetails.destination}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <div className="booked_on w-sm-50 float-start mb-2 w-25">
-                                                <div className="reference_no">
-                                                    <p className="h6 text-muted mb-1 mb-lg-3">Booked On</p>
-                                                    <p className="h6 milestone_title text-dark">
-                                                        {new Date(shipmentDetails.booked_on).toLocaleDateString()}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {/* End Header summary */}
-                                    <div className="timeline-steps d-md-flex justify-content-md-between justify-content-lg-between milestone-tracker-XS">
-                                        {shipmentDetails.status && shipmentDetails.status.length > 0 ? (
-                                            shipmentDetails.status.map((status, index) => (
-                                                <div
-                                                    className="timeline-step text-sm-center text-md-start"
-                                                    key={index}
-                                                >
-                                                    <div className="timeline-content text-sm-center text-md-start XS-d-flex">
-                                                        <div className="inner-circle">
-                                                            {status.completed && (
-                                                                <img
-                                                                    src="/assets/images/Check.svg"
-                                                                    className="position-absolute" alt="Completed"
-                                                                />
-                                                            )}
-
-                                                        </div>
-                                                        <div>
-                                                            <p className="h6 milestone_title text-dark">
-                                                                {status.stage}
-                                                            </p>
-                                                            <p className="h6 text-muted mb-1 mb-lg-3">
-                                                                {status.location}
-                                                                <br />
-                                                                {new Date(status.timestamp).toLocaleString()}
-                                                            </p>
-                                                        </div>
                                                     </div>
-                                                </div>
-                                            ))
-                                        ) : (
-                                            <p>No status updates available.</p>
-                                        )}
+                                                ))
+                                            ) : (
+                                                <p>No status updates available.</p>
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="col-lg-3 col-md-3 col-sm-12">
+                                    <div className="col-lg-3 col-md-3 col-sm-12">
 
-                                    {/* Milestone for XS */}
-                                    <div
-                                        className="accordion accordion-flush milestone-tracker-LG"
-                                        id="accordionFlushExample"
-                                    >
-                                        <div className="accordion-item">
-                                            <h2 className="accordion-header" id="flush-headingOne">
-                                                <button
-                                                    className={`accordion-button px-2 py-0 ${isMenuOpen ? "" : "collapsed"}`}
-                                                    type="button"
-                                                    data-bs-toggle="collapse"
-                                                    data-bs-target="#flush-collapseOne"
-                                                    aria-expanded={isMenuOpen ? "true" : "false"}
-                                                    aria-controls="flush-collapseOne"
-                                                    onClick={() => setIsMenuOpen(!isMenuOpen)}
-                                                >
+                                        {/* Milestone for XS */}
+                                        <div
+                                            className="accordion accordion-flush milestone-tracker-LG"
+                                            id="accordionFlushExample"
+                                        >
+                                            <div className="accordion-item">
+                                                <h2 className="accordion-header" id="flush-headingOne">
+                                                    <button
+                                                        className={`accordion-button px-2 py-0 ${isMenuOpen ? "" : "collapsed"}`}
+                                                        type="button"
+                                                        data-bs-toggle="collapse"
+                                                        data-bs-target="#flush-collapseOne"
+                                                        aria-expanded={isMenuOpen ? "true" : "false"}
+                                                        aria-controls="flush-collapseOne"
+                                                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                                                    >
 
-                                                    See all Updates
-                                                </button>
-                                            </h2>
+                                                        See all Updates
+                                                    </button>
+                                                </h2>
 
-                                            {isMenuOpen &&
+                                                {isMenuOpen &&
 
-                                                <div
-                                                    id="flush-collapseOne"
-                                                    className={`accordion-collapse collapse ${isMenuOpen ? "show" : ""}`}
-                                                    aria-labelledby="flush-headingOne"
-                                                    data-bs-parent="#accordionFlushExample"
-                                                >
-                                                    <div className="accordion-body p-0">
-                                                        <div className="timeline-steps d-md-flex justify-content-md-between justify-content-lg-between">
-                                                            {shipmentDetails.status && shipmentDetails.status.length > 0 ? (
-                                                                shipmentDetails.status.map((status, index) => (
-                                                                    <div
-                                                                        className="timeline-step text-sm-center text-md-start"
-                                                                        key={index}
-                                                                    >
-                                                                        <div className="timeline-content text-sm-center text-md-start XS-d-flex">
-                                                                            <div className="inner-circle">
-                                                                                {status.completed && (
-                                                                                    <img
-                                                                                        src="/assets/images/Check.svg"
-                                                                                        className="position-absolute" alt="Completed"
-                                                                                    />
-                                                                                )}
+                                                    <div
+                                                        id="flush-collapseOne"
 
-                                                                            </div>
-                                                                            <div>
-                                                                                <p className="h6 milestone_title text-dark">
-                                                                                    {status.stage}
-                                                                                </p>
-                                                                                <p className="h6 text-muted mb-1 mb-lg-3">
-                                                                                    {status.location}
-                                                                                    <br />
-                                                                                    {new Date(status.timestamp).toLocaleString()}
-                                                                                </p>
+                                                        aria-labelledby="flush-headingOne"
+                                                        data-bs-parent="#accordionFlushExample"
+                                                    >
+                                                        <div className="accordion-body p-0">
+                                                            <div className="timeline-steps d-md-flex justify-content-md-between justify-content-lg-between">
+                                                                {shipmentDetails.status && shipmentDetails.status.length > 0 ? (
+                                                                    shipmentDetails.status.map((status, index) => (
+                                                                        <div
+                                                                            className="timeline-step text-sm-center text-md-start"
+                                                                            key={index}
+                                                                        >
+                                                                            <div className="timeline-content text-sm-center text-md-start XS-d-flex">
+                                                                                <div className="inner-circle">
+                                                                                    {status.completed && (
+                                                                                        <img
+                                                                                            src="/assets/images/Check.svg"
+                                                                                            className="position-absolute" alt="Completed"
+                                                                                        />
+                                                                                    )}
+
+                                                                                </div>
+                                                                                <div>
+                                                                                    <p className="h6 milestone_title text-dark">
+                                                                                        {status.stage}
+                                                                                    </p>
+                                                                                    <p className="h6 text-muted mb-1 mb-lg-3">
+                                                                                        {status.location}
+                                                                                        <br />
+                                                                                        {new Date(status.timestamp).toLocaleString()}
+                                                                                    </p>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
-                                                                ))
-                                                            ) : (
-                                                                <p>No status updates available.</p>
-                                                            )}
+                                                                    ))
+                                                                ) : (
+                                                                    <p>No status updates available.</p>
+                                                                )}
 
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            }
+                                                }
 
+                                            </div>
+                                        </div>
+                                        {/* End Milestone for XS */}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="rowpb-5" data-id="f3779eb">
+                                <div
+                                    className="col-lg-6 mb-4 mb-lg-0 order-sm-first order-md-last d-block d-sm-none"
+                                    style={{ marginTop: "12px !important" }}
+                                >
+                                    <div
+                                        id="carouselExampleIndicators"
+                                        className="carousel slide"
+                                        data-bs-ride="carousel"
+                                    >
+                                        <div className="carousel-indicators">
+                                            <button
+                                                type="button"
+                                                data-bs-target="#carouselExampleIndicators"
+                                                data-bs-slide-to={0}
+                                                className="active"
+                                                aria-label="Slide 0"
+                                            />
+                                        </div>
+                                        <div className="carousel-inner">
+                                            <div className="carousel-item active">
+                                                <img
+                                                    src="/assets/images/edd_redd_banner.jpg"
+                                                    className="d-block w-100 radius-20"
+                                                    alt="..."
+                                                />
+                                            </div>{" "}
                                         </div>
                                     </div>
-                                    {/* End Milestone for XS */}
                                 </div>
                             </div>
-                        </div>
-                        <div className="rowpb-5" data-id="f3779eb">
-                            <div
-                                className="col-lg-6 mb-4 mb-lg-0 order-sm-first order-md-last d-block d-sm-none"
-                                style={{ marginTop: "12px !important" }}
-                            >
-                                <div
-                                    id="carouselExampleIndicators"
-                                    className="carousel slide"
-                                    data-bs-ride="carousel"
-                                >
-                                    <div className="carousel-indicators">
-                                        <button
-                                            type="button"
-                                            data-bs-target="#carouselExampleIndicators"
-                                            data-bs-slide-to={0}
-                                            className="active"
-                                            aria-label="Slide 0"
-                                        />
-                                    </div>
-                                    <div className="carousel-inner">
-                                        <div className="carousel-item active">
-                                            <img
-                                                src="img/TrackingSlides/edd_redd_banner.jpg"
-                                                className="d-block w-100 radius-20"
-                                                alt="..."
-                                            />
-                                        </div>{" "}
-                                    </div>
-                                </div>
+                            <div className="row pb-lg-0 pt-3 pb-5" data-id="d24928e">
+                                <p className="text-4">
+                                    <span style={{ color: "#dc0032" }}>BEWARE OF FRAUD CALLS.</span> We{" "}
+                                    <span style={{ color: "#dc0032" }}>will naver </span>ask for any payment
+                                    through <span style={{ color: "#dc0032" }}>OTP/UPI</span>
+                                </p>
                             </div>
                         </div>
-                        <div className="row pb-lg-0 pt-3 pb-5" data-id="d24928e">
-                            <p className="text-4">
-                                <span style={{ color: "#dc0032" }}>BEWARE OF FRAUD CALLS.</span> We{" "}
-                                <span style={{ color: "#dc0032" }}>will naver </span>ask for any payment
-                                through <span style={{ color: "#dc0032" }}>OTP/UPI</span>
-                            </p>
-                        </div>
-                    </div>
-                </>
-            )}
+                    </>
+                )}
+            </div>
         </>
     );
 };
