@@ -78,96 +78,471 @@ const Navbar = () => {
         }
     };
 
-    return (
-        <nav className={`p-4 sticky top-0 z-50 transition-all duration-300 ${isScrolled ? "bg-gray-900 text-white shadow-lg" : "bg-white shadow-md"}`}>
-            <div className="container mx-auto flex justify-between items-center">
-                <h1 className="text-xl font-bold cursor-pointer text-gray-800" onClick={() => router.push("/")}>LOGO</h1>
-
-                {/* Desktop Menu */}
-                <div className="hidden md:flex space-x-6">
-                    {menuItems.map((item, index) => (
-                        <div key={index} className="relative">
-                            <button
-                                className={`flex items-center space-x-2 transition-all duration-300 ${isScrolled ? "text-white hover:text-gray-300" : "text-gray-700 hover:text-blue-500"}`}
-                                onClick={() => toggleDropdown(index)}
-                            >
-                                {item.title} <FaChevronDown />
-                            </button>
-                            {openDropdown === index && (
-                                <ul className="absolute left-0 mt-2 w-48 bg-white border rounded shadow-lg">
-                                    {item.submenu.map((subItem, subIndex) => (
-                                        <li key={subIndex}>
-                                            <a href={subItem.link} className="block px-4 py-2 hover:bg-gray-100">
-                                                {subItem.title}
-                                            </a>
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
+    return <>
+        <header
+            id="header"
+            className="header-light header-effect-shrink "
+            style={{ height: "100.833px" }}
+            data-plugin-options="{'stickyEnabled': true, 'stickyEffect': 'shrink', 'stickyEnableOnBoxed': true, 'stickyEnableOnMobile': true, 'stickyChangeLogo': true, 'stickyStartAt': 120, 'stickyHeaderContainerHeight': 70}"
+        >
+            <div
+                className="header-body border-top-0 "
+                style={{ position: "fixed", top: 0 }}
+            >
+                <div
+                    className="header-container container"
+                    style={{ height: 100, minHeight: 0 }}
+                >
+                    <div className="header-row">
+                        <div className="header-column">
+                            <div className="header-row">
+                                <div
+                                    className="header-logo header-logo-sticky-change"
+                                    style={{ width: "175.99px", height: 40 }}
+                                >
+                                    <a href="index.asp">
+                                        <img
+                                            className="header-logo-non-sticky opacity-0"
+                                            alt="DTDC"
+                                            src="img/logos/logo.png"
+                                            height={40}
+                                            style={{ top: 0, height: 40 }}
+                                        />
+                                        <img
+                                            className="header-logo-sticky opacity-0"
+                                            alt="DTDC"
+                                            src="img/logos/logo-footer.png"
+                                            height={40}
+                                            style={{ top: 0, height: 40 }}
+                                        />
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-                    ))}
-                </div>
+                        {/*<div class="header-column header-column-logo">
+          <div class="header-row">
+              <div class="header-logo">
+                  <a href="index.html">
+                      <img alt="DTDC" height="45" src="img/demos/medical-2/logos/logo.png">
+                  </a>
+              </div>
+          </div>
+      </div>*/}
+                        <div className="header-column  justify-content-end">
+                            <div className="header-row ">
+                                <div className=" header-nav header-nav-links justify-content-start">
+                                    <div className="header-nav-main header-nav-main-square header-nav-main-effect-1 header-nav-main-sub-effect-1  header-nav-main-arrows ">
+                                        {isMenuOpen &&
+                                            <nav className={`collapse ${isMenuOpen ? "show" : "closed"}`} onClick={()=>setIsMenuOpen(false)}>
+                                                <ul className="nav nav-pills" id="mainNav">
+                                                    <li className="dropdown dropdown-secondary">
+                                                        <a className="nav-link dropdown-toggle dropdown-toggle">
+                                                            Company
+                                                            <i className="fas fa-chevron-down" />
+                                                        </a>
+                                                        <ul className="dropdown-menu">
+                                                            <li>
+                                                                <a
+                                                                    className="dropdown-item font-weight-normal"
+                                                                    href="about-us.asp"
+                                                                    title="About Us"
+                                                                >
+                                                                    About Us
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a
+                                                                    className="dropdown-item font-weight-normal"
+                                                                    href="leadership.asp"
+                                                                    title="Board of Directors"
+                                                                >
+                                                                    Board of Directors
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a
+                                                                    className="dropdown-item font-weight-normal"
+                                                                    href="awards-and-recognition.asp"
+                                                                    title="Awards and Recognition"
+                                                                >
+                                                                    Awards and Recognition
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a
+                                                                    className="dropdown-item font-weight-normal"
+                                                                    href="csr.asp"
+                                                                    title="Corporate Social Responsibility "
+                                                                >
+                                                                    Corporate Social Responsibility
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a
+                                                                    className="dropdown-item font-weight-normal"
+                                                                    href="investor-relations.asp"
+                                                                    title="Investor Relations"
+                                                                >
+                                                                    Investor Relations
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                    <li className="dropdown dropdown-secondary">
+                                                        <a className="nav-link dropdown-toggle">
+                                                            Service Verticals
+                                                            <i className="fas fa-chevron-down" />
+                                                        </a>
+                                                        <ul className="dropdown-menu">
+                                                            <li>
+                                                                <a
+                                                                    className="dropdown-item font-weight-normal"
+                                                                    href="express-parcels.asp"
+                                                                    title="Express Parcels"
+                                                                >
+                                                                    Express Parcels
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a
+                                                                    className="dropdown-item font-weight-normal"
+                                                                    href="international-shipments.asp"
+                                                                    title="International"
+                                                                >
+                                                                    International
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a
+                                                                    className="dropdown-item font-weight-normal"
+                                                                    href="integrated-e-commerce-logistics.asp"
+                                                                    title="Integrated E-Commerce Logistics"
+                                                                >
+                                                                    Integrated E-Commerce Logistics
+                                                                </a>
+                                                            </li>
+                                                            <li className="dropdown-submenu">
+                                                                <a className="dropdown-item font-weight-normal">
+                                                                    Service Guide
+                                                                    <i className="fas fa-chevron-down" />
+                                                                    <i className="fas fa-chevron-down" />
+                                                                </a>
+                                                                <ul className="dropdown-menu">
+                                                                    <li>
+                                                                        <a
+                                                                            className="dropdown-item"
+                                                                            href="conditions-of-carriage.asp"
+                                                                            title="Conditions of Carriage"
+                                                                        >
+                                                                            Conditions of Carriage
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a
+                                                                            className="dropdown-item"
+                                                                            href="pincode-serviceability.asp"
+                                                                            title="Pincode Serviceability"
+                                                                        >
+                                                                            Pincode Serviceability
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a
+                                                                            className="dropdown-item"
+                                                                            href="risk-surcharge.asp"
+                                                                            title="Risk Surcharge"
+                                                                        >
+                                                                            Risk Surcharge
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a
+                                                                            className="dropdown-item"
+                                                                            href="fuel-surcharge.asp"
+                                                                            title="Fuel Surcharge"
+                                                                        >
+                                                                            Fuel Surcharge
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a
+                                                                            className="dropdown-item"
+                                                                            href="volumetric-weight.asp"
+                                                                            title="Volumetric Weight"
+                                                                        >
+                                                                            Volumetric Weight
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a
+                                                                            className="dropdown-item"
+                                                                            href="restricted-and-banned-Items.asp"
+                                                                            title="Restricted and Banned Items"
+                                                                        >
+                                                                            Restricted and Banned Items
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a
+                                                                            className="dropdown-item"
+                                                                            href="KYC.asp"
+                                                                            title="KYC"
+                                                                        >
+                                                                            KYC
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a
+                                                                            className="dropdown-item"
+                                                                            href="paperwork-index.asp"
+                                                                            title="International Paperworks"
+                                                                        >
+                                                                            International Paperworks
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a
+                                                                            className="dropdown-item"
+                                                                            href="terms-and-conditions.asp"
+                                                                            title="T&C Digital CN"
+                                                                        >
+                                                                            T&amp;C Digital CN
+                                                                        </a>
+                                                                    </li>
+                                                                    <li className="dropdown-submenu">
+                                                                        <a className="dropdown-item font-weight-normal">
+                                                                            GST
+                                                                            <i className="fas fa-chevron-down" />
+                                                                            <i className="fas fa-chevron-down" />
+                                                                        </a>
+                                                                        <ul className="dropdown-menu">
+                                                                            <li>
+                                                                                <a
+                                                                                    className="dropdown-item"
+                                                                                    href="gst_customerfaq.asp"
+                                                                                    title="Customer FAQ"
+                                                                                >
+                                                                                    Customer FAQ
+                                                                                </a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a
+                                                                                    className="dropdown-item"
+                                                                                    href="gst_vendorfaq.asp"
+                                                                                    title="Vendor FAQ"
+                                                                                >
+                                                                                    Vendor FAQ
+                                                                                </a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a
+                                                                                    className="dropdown-item"
+                                                                                    href="gst_reg_dtdc_express.asp"
+                                                                                    title="Registration Info  DTDC EXPRESS LTD"
+                                                                                >
+                                                                                    Registration Info - DTDC EXPRESS LTD
+                                                                                </a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a
+                                                                                    className="dropdown-item"
+                                                                                    href="hsn_sac_nos.asp"
+                                                                                    title="HSN/SAC Numbers"
+                                                                                >
+                                                                                    HSN/SAC&nbsp;Numbers
+                                                                                </a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </li>
+                                                                </ul>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                    <li className="dropdown dropdown-secondary">
+                                                        <a className="nav-link dropdown-toggle">
+                                                            Solutions
+                                                            <i className="fas fa-chevron-down" />
+                                                        </a>
+                                                        <ul className="dropdown-menu">
+                                                            <li>
+                                                                <a
+                                                                    className="dropdown-item font-weight-normal"
+                                                                    href="industry-solutions.asp"
+                                                                    title="Industry Solutions"
+                                                                >
+                                                                    Industry Solutions
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a
+                                                                    className="dropdown-item font-weight-normal"
+                                                                    href="temperature_controlled_logistics.asp"
+                                                                    title="Temperature Controlled Logistics"
+                                                                >
+                                                                    Temperature Controlled Logistics
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a
+                                                                    className="dropdown-item font-weight-normal"
+                                                                    href="technology-solutions.asp"
+                                                                    title="Technology Solutions"
+                                                                >
+                                                                    Technology Solutions
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                    <li className="dropdown dropdown-secondary">
+                                                        <a className="nav-link dropdown-toggle">
+                                                            Grow With Us
+                                                            <i className="fas fa-chevron-down" />
+                                                        </a>
+                                                        <ul className="dropdown-menu">
+                                                            <li>
+                                                                <a
+                                                                    className="dropdown-item font-weight-normal"
+                                                                    title="Become a Partner"
+                                                                    href="become-a-partner.asp"
+                                                                >
+                                                                    Become a Partner
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a
+                                                                    className="dropdown-item font-weight-normal"
+                                                                    title="Ship with MyDTDC "
+                                                                    href="https://mydtdc.in/"
+                                                                    target="_blank"
+                                                                >
+                                                                    Ship with MyDTDC
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a
+                                                                    className="dropdown-item font-weight-normal"
+                                                                    title="Business Inquiry"
+                                                                    href="sales-inquiry.asp"
+                                                                >
+                                                                    Business Inquiry
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                    <li className="dropdown dropdown-secondary">
+                                                        <a className="nav-link dropdown-toggle">
+                                                            Careers
+                                                            <i className="fas fa-chevron-down" />
+                                                        </a>
+                                                        <ul className="dropdown-menu">
+                                                            <li>
+                                                                <a
+                                                                    className="dropdown-item font-weight-normal"
+                                                                    title="Life at DTDC"
+                                                                    href="life-at-dtdc.asp"
+                                                                >
+                                                                    Life at DTDC
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a
+                                                                    className="dropdown-item font-weight-normal"
+                                                                    title="Join us"
+                                                                    href="join-us.asp"
+                                                                >
+                                                                    Join us
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                    <li className="dropdown dropdown-secondary">
+                                                        <a className="nav-link dropdown-toggle">
+                                                            Contact Us
+                                                            <i className="fas fa-chevron-down" />
+                                                        </a>
+                                                        <ul className="dropdown-menu">
+                                                            <li>
+                                                                <a
+                                                                    className="dropdown-item font-weight-normal"
+                                                                    title="Track your Shipment"
+                                                                    href="trace.asp"
+                                                                >
+                                                                    Track your Shipment
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a
+                                                                    className="dropdown-item font-weight-normal "
+                                                                    title="Locate Us"
+                                                                    href="location-finder.asp"
+                                                                >
+                                                                    Locate Us
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a
+                                                                    className="dropdown-item font-weight-normal"
+                                                                    title="Customer Care"
+                                                                    href="customer-care.asp"
+                                                                >
+                                                                    Customer Care
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </nav>
+                                        }
+                                    </div>
 
-                {/* Auth Buttons */}
-                <div className="hidden md:flex items-center space-x-4">
-                    {isAuthenticated ? (
-                        <div className="relative">
-                            <button className={`transition-all duration-300 ${isScrolled ? "text-white hover:text-gray-300" : "text-gray-700 hover:text-blue-500"}`} onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-                                <FaUserCircle size={28} />
-                            </button>
-                            {isDropdownOpen && (
-                                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg">
-                                    <Link href="/profile" className="flex items-center px-4 py-2 hover:bg-gray-100">
-                                        <FaUserCircle className="mr-2" /> Profile
-                                    </Link>
-                                    <Link href="/settings" className="flex items-center px-4 py-2 hover:bg-gray-100">
-                                        <MdSettings className="mr-2" /> Settings
-                                    </Link>
-                                    <button onClick={handleLogout} className="flex items-center w-full px-4 py-2 text-red-600 hover:bg-gray-100">
-                                        <MdLogout className="mr-2" /> Logout
+
+
+                                    <button
+                                        className={`btn header-btn-collapse-nav ${isMenuOpen ? '' : "collapsed"}`}
+                                        data-bs-toggle="collapse"
+                                        data-bs-target=".header-nav-main nav"
+                                        aria-expanded={`${isMenuOpen ? 'true' : "false"}`}
+                                        onClick={() => setIsMenuOpen(true)}
+                                    >
+                                        <i className="fas fa-bars" />
                                     </button>
                                 </div>
-                            )}
+                                <div className=" header-logo-sticky-change mobile-none">
+                                    {/* <a
+                                        href="https://web.mydtdc.in/"
+                                        title="SHIP WITH My DTDC"
+                                        className=" header-logo-sticky btn btn-modern btn-light  border-0 btn-arrow-effect-1"
+                                        style={{
+                                            textTransform: "initial",
+                                            textDecoration: "none",
+                                            height: 42
+                                        }}
+                                        target="_blank"
+                                    >
+                                        SHIP WITH MyDTDC
+                                    </a> */}
+                                    <a
+                                        href="https://web.mydtdc.in/"
+                                        title="SHIP WITH My DTDC"
+                                        className="header-logo-non-sticky btn btn-modern btn-primary  border-0 btn-arrow-effect-1"
+                                        style={{
+                                            textTransform: "initial",
+                                            textDecoration: "none",
+                                            height: 42
+                                        }}
+                                        target="_blank"
+                                    >
+                                        SHIP WITH MyDTDC
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-                    ) : (
-                        <div className="flex space-x-4">
-                            <button onClick={() => router.push("/home/login")} className={`px-4 py-1 text-sm rounded shadow-md transition-all duration-300 ${isScrolled ? "bg-blue-700 text-white hover:bg-blue-800" : "bg-blue-500 text-white hover:bg-blue-600"}`}>Login</button>
-                            <button onClick={() => router.push("/home/register")} className={`px-4 py-1 text-sm rounded shadow-md transition-all duration-300 ${isScrolled ? "bg-green-700 text-white hover:bg-green-800" : "bg-green-500 text-white hover:bg-green-600"}`}>Sign Up</button>
-                        </div>
-                    )}
+                    </div>
                 </div>
-
-                {/* Mobile Menu Button */}
-                <button className="md:hidden focus:outline-none" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16m-7 6h7"} />
-                    </svg>
-                </button>
             </div>
+        </header>
 
-            {/* Mobile Menu */}
-            {isMenuOpen && (
-                <div className="md:hidden flex flex-col space-y-2 mt-4 bg-gray-50 p-4 rounded-lg shadow-md">
-                    <Link href="/" className="block text-gray-700 hover:text-blue-500">Home</Link>
-                    <Link href="/home/about" className="block text-gray-700 hover:text-blue-500">About</Link>
-                    <Link href="/home/contact" className="block text-gray-700 hover:text-blue-500">Contact</Link>
-                    <div className="border-t border-gray-300 my-2"></div>
-                    {isAuthenticated ? (
-                        <>
-                            <Link href="/profile" className="block text-gray-700 hover:text-blue-500">Profile</Link>
-                            <Link href="/settings" className="block text-gray-700 hover:text-blue-500">Settings</Link>
-                            <button onClick={handleLogout} className="w-full bg-red-500 px-4 py-2 rounded text-white hover:bg-red-600">Logout</button>
-                        </>
-                    ) : (
-                        <>
-                            <button onClick={() => router.push("/home/login")} className="w-full bg-blue-500 px-4 py-2 rounded text-white hover:bg-blue-600">Login</button>
-                            <button onClick={() => router.push("/home/register")} className={`px-4 py-1 text-sm rounded shadow-md transition-all duration-300 ${isScrolled ? "bg-green-700 text-white hover:bg-green-800" : "bg-green-500 text-white hover:bg-green-600"}`}>Sign Up</button>
-                        </>
-                    )}
-                </div>
-            )}
-        </nav>
-    );
+    </>
 };
 
 export default Navbar;
