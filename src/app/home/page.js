@@ -41,7 +41,7 @@ const Tracking = () => {
 
     return (
         <>
-            <div className="min-h-screen container mx-auto px-4 py-6 ">
+            <div className=" container mx-auto px-4 py-6 ">
                 <div className="row pt-5 ">
                     <div className="col">
                         <div className="row">
