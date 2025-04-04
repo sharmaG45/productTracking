@@ -1,10 +1,38 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
+import { useEffect, useState } from "react";
 
 const Footer = () => {
     const router = useRouter();
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+
+    useEffect(() => {
+        const checkAuth = () => {
+            if (typeof window !== "undefined") {
+                const token = localStorage.getItem("currentUser");
+                setIsAuthenticated(!!token);
+            }
+        };
+
+        checkAuth();
+
+        // Listen for auth changes
+        const handleAuthChange = () => checkAuth();
+        window.addEventListener("authChange", handleAuthChange);
+
+        return () => window.removeEventListener("authChange", handleAuthChange);
+    }, []);
+
+    const handleLogout = () => {
+        if (typeof window !== "undefined") {
+            localStorage.removeItem("currentUser");
+            setIsAuthenticated(false);
+            router.push('/');
+            window.dispatchEvent(new Event("authChange")); // Notify other components
+        }
+    };
 
     return (
         <footer id="footer" className="m-0 ">
@@ -17,10 +45,10 @@ const Footer = () => {
                             data-appear-animation-delay={500}
                             style={{ animationDelay: "500ms" }}
                         >
-                            <a href="index.asp">
+                            <a href="/">
                                 {" "}
                                 <img
-                                    src="img/logos/logo-footer.png"
+                                    src="/assets/images/logo-footer.png"
                                     alt="DTDC Logo Footer"
                                     width={150}
                                 />
@@ -194,27 +222,27 @@ const Footer = () => {
                             Self Service Portals
                         </h4>
                         <div className="heading-bottom-border mb-4 " />
-                        <div className="" />
+
                         <div className="nav-footer d-flex">
                             <ul>
                                 <li>
-                                    <a
-                                        href="https://myaccount.dtdc.com/"
-                                        title="Customer Login"
-                                        target="_blank"
-                                    >
-                                        Customer Login
-                                    </a>
+                                    {isAuthenticated ? (
+                                        <button
+                                            onClick={() => handleLogout()} // ✅ call inside arrow function
+
+                                            title="Logout"
+                                            className="text-start bg-transparent border-0 p-0 text-white"
+                                            style={{ cursor: "pointer" }}
+                                        >
+                                            Logout
+                                        </button>
+                                    ) : (
+                                        <a href="/home/login" title="Customer Login">
+                                            Customer Login
+                                        </a>
+                                    )}
                                 </li>
-                                <li>
-                                    <a
-                                        href="http://frplus.dtdc.com/"
-                                        title="Channel Partner Login"
-                                        target="_blank"
-                                    >
-                                        Channel Partner Login
-                                    </a>
-                                </li>
+
                                 <li>
                                     <a
                                         href="http://intra.dtdc.co.in/"

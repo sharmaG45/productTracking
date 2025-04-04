@@ -4,6 +4,10 @@ import { useState, useEffect } from 'react';
 import { fireStore } from "@/app/_component/firebase/config";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import io from 'socket.io-client';
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 
 const socket = io('http://localhost:4000');
 
@@ -12,7 +16,9 @@ const Tracking = () => {
     const [shipmentDetails, setShipmentDetails] = useState(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [trackingType, setTrackingType] = useState("referenceNo");
     const [error, setError] = useState("");
+
 
     const fetchShipmentByReference = async () => {
         setLoading(true);
@@ -20,24 +26,70 @@ const Tracking = () => {
         setShipmentDetails(null);
 
         try {
+            // Determine field to query based on selected radio button
+            let fieldToQuery = trackingType === "awb" ? "reference_no" : "order_no";
+
             const shipmentQuery = query(
                 collection(fireStore, "shipments"),
-                where("reference_no", "==", referenceNo)
+                where(fieldToQuery, "==", referenceNo.trim())
             );
+
             const querySnapshot = await getDocs(shipmentQuery);
 
             if (!querySnapshot.empty) {
                 const shipmentData = querySnapshot.docs[0].data();
                 setShipmentDetails(shipmentData);
             } else {
-                setError("No shipment found with this reference number.");
+                setError(
+                    "No shipment found with this " +
+                    (trackingType === "awb" ? "AWB" : "Order Number") +
+                    "."
+                );
             }
         } catch (error) {
             setError("Error fetching shipment details.");
             console.error("Error:", error);
         }
+
         setLoading(false);
     };
+
+    const settings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 3000,
+        arrows: false
+    };
+
+
+    // const fetchShipmentByReference = async () => {
+    //     setLoading(true);
+    //     setError("");
+    //     setShipmentDetails(null);
+
+    //     try {
+    //         const shipmentQuery = query(
+    //             collection(fireStore, "shipments"),
+    //             where("reference_no", "==", referenceNo)
+    //         );
+    //         const querySnapshot = await getDocs(shipmentQuery);
+
+    //         if (!querySnapshot.empty) {
+    //             const shipmentData = querySnapshot.docs[0].data();
+    //             setShipmentDetails(shipmentData);
+    //         } else {
+    //             setError("No shipment found with this reference number.");
+    //         }
+    //     } catch (error) {
+    //         setError("Error fetching shipment details.");
+    //         console.error("Error:", error);
+    //     }
+    //     setLoading(false);
+    // };
 
     return (
         <>
@@ -93,11 +145,27 @@ const Tracking = () => {
                                                                 type="radio"
                                                                 name="trackingType"
                                                                 data-msg-required="Please select at least one option."
-                                                                id="trackingType"
-                                                                defaultValue="referenceNo"
-                                                                required=""
+                                                                value="awb"
+                                                                id="awb"
+                                                                checked={trackingType === "awb"}
+                                                                onChange={(e) => setTrackingType(e.target.value)}
                                                             />
-                                                            AWB/ CONSIGNMENT NUMBER
+                                                            AWB
+                                                        </label>
+                                                    </div>
+                                                    <div className="form-check form-check-inline">
+                                                        <label className="form-check-label ">
+                                                            <input
+                                                                className="form-check-input"
+                                                                type="radio"
+                                                                name="trackingType"
+                                                                data-msg-required="Please select at least one option."
+                                                                value="order"
+                                                                id="order"
+                                                                checked={trackingType === "order"}
+                                                                onChange={(e) => setTrackingType(e.target.value)}
+                                                            />
+                                                            ORDER NUMBER
                                                         </label>
                                                     </div>
                                                 </div>
@@ -116,7 +184,7 @@ const Tracking = () => {
                                                     />
                                                     {/*<input type="text"  data-msg-required="" class="form-control" name="trackingNumber" id="trackingNumber" onkeyup="limitCnNumbers()" maxlength="400" required="" value="">*/}
                                                 </div>
-                                                <p className="m-0" style={{ color: "#2F4F4F" }}>
+                                                <p className="m-0" style={{ color: "#2F4F4F", fontSize:'1.1rem' }}>
                                                     To track multiple consignments, please enter any combination of up to 25 tracking numbers, separated by commas
                                                 </p>
                                             </div>
@@ -138,32 +206,28 @@ const Tracking = () => {
                                                 </div>
                                             </div>
                                         </div>
+
+                                        {/* Slider */}
+
                                         <div className="col-lg-6 mb-4 mb-lg-0 carousel-display-max">
-                                            <div
-                                                id="carouselExampleIndicators"
-                                                className="carousel slide"
-                                                data-bs-ride="carousel"
-                                            >
-                                                <div className="carousel-indicators">
-                                                    <button
-                                                        type="button"
-                                                        data-bs-target="#carouselExampleIndicators"
-                                                        data-bs-slide-to={0}
-                                                        className="active"
-                                                        aria-label="Slide 0"
+                                            <Slider {...settings}>
+                                                <div>
+                                                    <img
+                                                        src="/assets/images/edd_redd_banner.jpg"
+                                                        className="d-block w-100 rounded-3xl border-none"
+                                                        alt="Slide 1"
                                                     />
                                                 </div>
-                                                <div className="carousel-inner">
-                                                    <div className="carousel-item active">
-                                                        <img
-                                                            src="/assets/images/edd_redd_banner.jpg"
-                                                            className="d-block w-100 radius-20"
-                                                            alt="..."
-                                                        />
-                                                    </div>{" "}
+                                                <div>
+                                                    <img
+                                                        src="/assets/images/EDDnewBanner.jpeg"
+                                                        className="d-block w-100 rounded-3xl border-none"
+                                                        alt="Slide 2"
+                                                    />
                                                 </div>
-                                            </div>
+                                            </Slider>
                                         </div>
+
                                     </div>
                                 </form>
                             </div>
@@ -196,7 +260,7 @@ const Tracking = () => {
 
                                             <li>
                                                 <a
-                                                    href="raise_a_service_query.asp"
+                                                    href="/home/contact-us"
                                                     className="text-decoration-none text-white"
                                                 >
                                                     {" "}
@@ -253,10 +317,10 @@ const Tracking = () => {
                                     </div>
                                 </div>
                                 <div className="row">
-                                    <div className="col-lg-9 col-md-9 col-sm-12">
+                                    <div className="col-lg-12 col-md-12 col-sm-12">
                                         {/* Header summary */}
                                         <div className="row my-4 mb-2">
-                                            <div className="header_summary_main d-md-flex d-sm-flex text-break">
+                                            <div className="header_summary_main d-md-flex d-sm-flex text-break d-flex justify-evenly">
                                                 <div className="reference_no w-sm-50 float-start mb-2 w-25">
                                                     <div className="reference_no">
                                                         <p className="h6 text-muted mb-1 mb-lg-3">Reference No</p>

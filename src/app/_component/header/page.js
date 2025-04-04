@@ -1,82 +1,11 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useEffect, useState, useCallback } from "react";
-import Link from "next/link";
-import { FaUserCircle, FaChevronDown } from "react-icons/fa"; // Profile Icon
-import { MdLogout, MdSettings } from "react-icons/md"; // Icons
+import { useState} from "react";
+
 
 const Navbar = () => {
-    const router = useRouter();
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-    const [openDropdown, setOpenDropdown] = useState(null);
-    const [isScrolled, setIsScrolled] = useState(false);
-
-    const toggleDropdown = (index) => {
-        setOpenDropdown(openDropdown === index ? null : index);
-    };
-
-    const menuItems = [
-        {
-            title: "Company",
-            submenu: [
-                { title: "About Us", link: "/home/about" },
-                { title: "Awards and Recognition", link: "#" },
-
-            ],
-        },
-        {
-            title: "Solutions",
-            submenu: [
-                { title: "Industry Solutions", link: "#" },
-                { title: "Technology Solutions", link: "#" },
-            ],
-        },
-        {
-            title: "Careers",
-            submenu: [
-                { title: "Life at DTDC", link: "#" },
-                { title: "Join us", link: "#" },
-            ],
-        },
-        {
-            title: "Contact Us",
-            submenu: [
-                { title: "Track your Shipment", link: "/" },
-                { title: "Locate Us", link: "#" },
-                { title: "Customer Care", link: "#" },
-            ],
-        },
-    ];
-
-    useEffect(() => {
-        const checkAuth = () => {
-            if (typeof window !== "undefined") {
-                const token = localStorage.getItem("currentUser");
-                setIsAuthenticated(!!token);
-            }
-        };
-
-        checkAuth();
-
-        // Listen for auth changes
-        const handleAuthChange = () => checkAuth();
-        window.addEventListener("authChange", handleAuthChange);
-
-        return () => window.removeEventListener("authChange", handleAuthChange);
-    }, []);
-
-    const handleLogout = () => {
-        if (typeof window !== "undefined") {
-            localStorage.removeItem("currentUser");
-            setIsAuthenticated(false);
-            router.push('/');
-            window.dispatchEvent(new Event("authChange")); // Notify other components
-        }
-    };
 
     return <>
         <header
@@ -100,16 +29,14 @@ const Navbar = () => {
                                     className="header-logo header-logo-sticky-change"
                                     style={{ width: "175.99px", height: 40 }}
                                 >
-                                    <a href="index.asp">
+                                    <a href="/">
                                         <img
                                             className="header-logo-non-sticky"
                                             alt="DTDC"
-                                            src="img/logos/logo.png"
+                                            src="/assets/images/logo.png"
                                             height={40}
                                             style={{ top: 0, height: 40, opacity: 1 }}
                                         />
-
-
                                     </a>
                                 </div>
                             </div>
@@ -119,8 +46,7 @@ const Navbar = () => {
                             <div className="header-row ">
                                 <div className=" header-nav header-nav-links justify-content-start">
                                     <div className="header-nav-main header-nav-main-square header-nav-main-effect-1 header-nav-main-sub-effect-1  header-nav-main-arrows ">
-
-                                        <nav className={`collapse ${isMenuOpen ? "show" : "closed"}`} onClick={() => setIsMenuOpen(false)}>
+                                        <nav className={`collapse ${isMenuOpen ? "show" : "closed"}`}>
                                             <ul className="nav nav-pills" id="mainNav" style={{
                                                 display: 'flex',
                                                 visibility: 'visible',
@@ -484,35 +410,20 @@ const Navbar = () => {
                                                 </li>
                                             </ul>
                                         </nav>
-
                                     </div>
-
-
 
                                     <button
                                         className={`btn header-btn-collapse-nav ${isMenuOpen ? '' : "collapsed"}`}
                                         data-bs-toggle="collapse"
                                         data-bs-target=".header-nav-main nav"
                                         aria-expanded={`${isMenuOpen ? 'true' : "false"}`}
-                                        onClick={() => setIsMenuOpen(true)}
+                                        onClick={() => setIsMenuOpen(!isMenuOpen)}
                                     >
                                         <i className="fas fa-bars" />
                                     </button>
                                 </div>
                                 <div className=" header-logo-sticky-change mobile-none">
-                                    {/* <a
-                                        href="https://web.mydtdc.in/"
-                                        title="SHIP WITH My DTDC"
-                                        className=" header-logo-sticky btn btn-modern btn-light  border-0 btn-arrow-effect-1"
-                                        style={{
-                                            textTransform: "initial",
-                                            textDecoration: "none",
-                                            height: 42
-                                        }}
-                                        target="_blank"
-                                    >
-                                        SHIP WITH MyDTDC
-                                    </a> */}
+                                    
                                     <a
                                         href="https://web.mydtdc.in/"
                                         title="SHIP WITH My DTDC"
