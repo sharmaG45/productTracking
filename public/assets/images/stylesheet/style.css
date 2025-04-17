@@ -2825,7 +2825,7 @@ html.sticky-header-enabled.sticky-header-active #header .header-logo-sticky-chan
 	#header .header-nav-main-arrows nav > ul > li > a.dropdown-toggle:after {
 		display: inline-block;
 		font-family: 'Font Awesome 6 Free';
-		content: "\f078";
+		/* content: "\f078"; */
 		font-weight: 900;
 		border: 0;
 		width: auto;
@@ -41156,7 +41156,7 @@ html.sticky-header-enabled.sticky-header-active #header .header-logo-sticky-chan
 	#header .header-nav-main-arrows nav > ul > li > a.dropdown-toggle:after {
 		display: inline-block;
 		font-family: 'Font Awesome 6 Free';
-		content: "\f078";
+		/* content: "\f078"; */
 		font-weight: 900;
 		border: 0;
 		width: auto;

@@ -55,10 +55,10 @@ const Navbar = () => {
                                             >
                                                 <li className="dropdown dropdown-secondary">
                                                     <a className="nav-link dropdown-toggle dropdown-toggle">
-                                                        Company
-                                                        <i className="fas fa-chevron-down" />
+                                                        About us
+                                                        {/* <i className="fas fa-chevron-down" /> */}
                                                     </a>
-                                                    <ul className="dropdown-menu">
+                                                    {/* <ul className="dropdown-menu">
                                                         <li>
                                                             <a
                                                                 className="dropdown-item font-weight-normal"
@@ -104,7 +104,7 @@ const Navbar = () => {
                                                                 Investor Relations
                                                             </a>
                                                         </li>
-                                                    </ul>
+                                                    </ul> */}
                                                 </li>
                                                 <li className="dropdown dropdown-secondary">
                                                     <a className="nav-link dropdown-toggle">
@@ -392,7 +392,7 @@ const Navbar = () => {
                                                             <a
                                                                 className="dropdown-item font-weight-normal "
                                                                 title="Locate Us"
-                                                                href="location-finder.asp"
+                                                                href="/home/contact-us"
                                                             >
                                                                 Locate Us
                                                             </a>
